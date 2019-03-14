@@ -35,6 +35,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 set(SOURCES
     src/CRandomNumberGenerator.cpp
+    src/gaussian.cpp
+    src/gaussian_mixture_model.cpp
+    src/gmm_classifier.cpp
+    src/gmm_regressor.cpp
+    src/k_means.cpp
+    src/matrix_io.cpp
+    src/pca.cpp
 )
 
 set(CODE_LIBRARIES )
