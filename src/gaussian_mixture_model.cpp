@@ -218,4 +218,13 @@ namespace gmms {
 
     return model;
   }
+
+  std::string GaussianMixtureModel::toString() const{
+      std::stringstream gmm_string;
+      gmm_string << "GMM: \n";
+      for(const Gaussian& gaussian : gaussian_vec_) {
+          gmm_string << gaussian.toString();
+      }
+      return gmm_string.str();
+  }
 } // namespace gmms

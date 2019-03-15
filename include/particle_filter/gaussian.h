@@ -10,9 +10,11 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <string>
 
 #include <Eigen/Core>
 #include <Eigen/LU>
+#include <Eigen/Dense>
 
 #include <particle_filter/defs.h>
 
@@ -43,7 +45,8 @@ class Gaussian {
   void setCovariance(const Eigen::MatrixXd& covariance);
   inline Eigen::MatrixXd covariance() const { return covariance_; }
   void setMeanCovariance(const Eigen::VectorXd& mean, const Eigen::MatrixXd& covariance);
-  
+  std::string toString() const;
+
  private:
   int dimensionality_;
   Eigen::VectorXd mean_;

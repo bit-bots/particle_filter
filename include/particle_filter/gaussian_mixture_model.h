@@ -9,6 +9,7 @@
 #define _GAUSSIAN_MIXTURE_MODEL_H_
 
 #include <vector>
+#include <string>
 #include <stdexcept>
 #include <Eigen/Core>
 
@@ -89,6 +90,8 @@ class GaussianMixtureModel {
     }
     return covs;
   }
+  std::string toString() const;
+
 
  private:
   bool initialized_;

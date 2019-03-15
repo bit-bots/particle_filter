@@ -8,6 +8,7 @@
 #include <cmath>
 #include <Eigen/Eigenvalues>
 
+
 #include <particle_filter/gaussian.h>
 
 namespace gmms {
@@ -62,4 +63,15 @@ namespace gmms {
     setMean(mean);
     setCovariance(covariance);
   }
+
+  std::string Gaussian::toString() const{
+      Eigen::IOFormat mean_format(5, 0, ", ", "\n", "[", "]", "Mean:       ", "\n");
+      Eigen::IOFormat cov_format(5, 0, ", ", "\n", "[", "]", "Covariance: ", "\n");
+      std::stringstream gaussian_string;
+      gaussian_string << "Gaussian: \n";
+      gaussian_string << mean_.format(mean_format);
+      gaussian_string << covariance_.format(cov_format);
+      return gaussian_string.str();
+  }
+
 } // namespace gmms
