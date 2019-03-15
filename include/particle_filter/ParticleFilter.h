@@ -6,13 +6,17 @@
 #include <limits>
 #include <memory>
 
-#include "particle_filter/ObservationModel.h"
-#include "particle_filter/MovementModel.h"
-#include "particle_filter/ResamplingStrategy.h"
-#include "particle_filter/ImportanceResampling.h"
-#include "particle_filter/CompareParticleWeights.h"
-#include "particle_filter/Particle.h"
-#include "particle_filter/StateDistribution.h"
+#include <Eigen/Core>
+
+#include <particle_filter/ObservationModel.h>
+#include <particle_filter/MovementModel.h>
+#include <particle_filter/ResamplingStrategy.h>
+#include <particle_filter/ImportanceResampling.h>
+#include <particle_filter/CompareParticleWeights.h>
+#include <particle_filter/Particle.h>
+#include <particle_filter/StateDistribution.h>
+
+#include <particle_filter/gaussian_mixture_model.h>
 
 #include <visualization_msgs/Marker.h>
 #include <geometry_msgs/Vector3.h>
@@ -365,6 +369,8 @@ class ParticleFilter {
     void setMarkerColor(std_msgs::ColorRGBA color);
 
     void setMarkerNamespace(std::string);
+
+    gmms::GaussianMixtureModel getGMM(int number_of_components);
 
   protected:
 

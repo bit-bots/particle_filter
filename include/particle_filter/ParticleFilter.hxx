@@ -319,4 +319,15 @@ void ParticleFilter<StateType>::setMarkerNamespace(std::string marker_namespace)
     marker_namespace_ = marker_namespace;
 }
 
+template <class StateType>
+gmms::GaussianMixtureModel ParticleFilter<StateType>::getGMM(int number_of_components) {
+    gmms::GaussianMixtureModel gmm(number_of_components);  // TODO: add params for delta and iterations
+    Eigen::MatrixXd dataset;
+    StateType::convertParticleListToEigen(m_CurrentList, dataset);
+    gmm.initialize(dataset);
+    gmm.expectationMaximization(dataset);
+    return gmm;
+}
+
+
 } // end of namespace
