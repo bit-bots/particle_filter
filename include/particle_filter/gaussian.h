@@ -11,6 +11,8 @@
 #include <stdexcept>
 #include <iostream>
 #include <string>
+#include <stdlib.h>
+#include <math.h>
 
 #include <Eigen/Core>
 #include <Eigen/LU>
@@ -46,6 +48,7 @@ class Gaussian {
   inline Eigen::MatrixXd covariance() const { return covariance_; }
   void setMeanCovariance(const Eigen::VectorXd& mean, const Eigen::MatrixXd& covariance);
   std::string toString() const;
+  void addToEigenMatrix(Eigen::MatrixXd& matrix, float x0, float y0, float x1, float y1, int stepcount) const;
 
  private:
   int dimensionality_;
