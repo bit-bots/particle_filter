@@ -12,6 +12,9 @@
 #include <string>
 #include <stdexcept>
 #include <Eigen/Core>
+#include <visualization_msgs/Marker.h>
+#include <geometry_msgs/Point.h>
+#include <std_msgs/ColorRGBA.h>
 
 #include <particle_filter/matrix_io.h>
 #include <particle_filter/gaussian.h>
@@ -92,6 +95,7 @@ class GaussianMixtureModel {
   }
   std::string toString() const;
 
+  visualization_msgs::Marker generateMarker(float x0, float y0, float x1, float y1, int stepcount, std::string n_space, ros::Duration lifetime) const;
 
  private:
   bool initialized_;

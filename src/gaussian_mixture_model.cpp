@@ -227,4 +227,51 @@ namespace gmms {
       }
       return gmm_string.str();
   }
+
+  visualization_msgs::Marker GaussianMixtureModel::generateMarker(float x0, float y0, float x1, float y1, int stepcount, std::string n_space, ros::Duration lifetime) const{
+      assert(x0 < x1);
+      assert(y0 < y1);
+      Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(stepcount, stepcount);
+      // calculate values for each position by summing up the Gaussians in the GMM
+      for(const Gaussian& gaussian : gaussian_vec_) {
+          gaussian.addToEigenMatrix(matrix, x0, y0, x1, y1, stepcount);
+      }
+      // normalizing the matrix to values between 0 and 1
+      matrix = matrix.array() - matrix.minCoeff();
+      matrix = matrix / matrix.maxCoeff();
+      float x_delta = std::abs(x1 - x0);
+      float y_delta = std::abs(y1 - y0);
+      float x, y;
+      visualization_msgs::Marker marker;
+      marker.ns = n_space;
+      marker.type = visualization_msgs::Marker::POINTS;
+      marker.action = visualization_msgs::Marker::ADD;
+      marker.lifetime = lifetime;
+      marker.header.frame_id = "base_link";  // TODO: this. different
+      marker.scale.x = 0.05;
+      marker.scale.y = 0.05;
+      marker.scale.z = 0.05;
+      marker.pose.orientation.w = 1;
+      // TODO: save stepsize (in Gaussian, too)
+
+      for (int y_step = 0; y_step < stepcount; y_step++) {
+          y = y0 + (y_delta / stepcount * y_step);
+          for (int x_step = 0; x_step < stepcount; x_step++) {
+              x = x0 + (x_delta / stepcount * x_step);
+              geometry_msgs::Point point;
+              point.x = x;
+              point.y = y;
+              point.z = matrix(y_step, x_step);
+              marker.points.push_back(point);
+              std_msgs::ColorRGBA color;
+              color.a = .8;
+              color.b = 0;
+              color.g = (1 - matrix(y_step, x_step));
+              color.r = matrix(y_step, x_step);
+              marker.colors.push_back(color);
+          }
+      }
+      return marker;
+  }
+
 } // namespace gmms
