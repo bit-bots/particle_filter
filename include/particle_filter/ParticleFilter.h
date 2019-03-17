@@ -290,7 +290,7 @@ class ParticleFilter {
      * @param dt time interval to use for filtering. If negative, the time interval
      *        will be calculated (time since last call of filter())
      */
-    void filter(double dt = -1.0);
+    void filter();
 
     /**
      * Returns a pointer to a particle with a given index.
@@ -341,9 +341,9 @@ class ParticleFilter {
 
     /**
      * This method "diffuses" the particles using the movement model of the particle filter to add a small jitter
-     * to the particle states. dt defines the time interval that has to be used in diffusion (in seconds).
+     * to the particle states.
      */
-    void diffuse(double dt);
+    void diffuse();
 
     /**
      * This method assigns weights to the particles using the observation model of the particle filter.

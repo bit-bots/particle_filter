@@ -117,7 +117,7 @@ void ParticleFilter<StateType>::resetTimer() {
 }
 
 template <class StateType>
-void ParticleFilter<StateType>::filter(double dt) {
+void ParticleFilter<StateType>::filter() {
     if (m_ResamplingMode == RESAMPLE_NEFF) {
         if (getNumEffectiveParticles() < m_NumParticles / 2) {
             resample();
@@ -126,19 +126,8 @@ void ParticleFilter<StateType>::filter(double dt) {
         resample();
     } // else do not resample
 
-    if (dt < 0.0) // use internal time measurement
-    {
-        // for the first run, we have no information about the time interval
-        if (m_FirstRun) {
-            m_FirstRun = false;
-            m_LastDriftTime = clock();
-        }
-        clock_t currentTime = clock();
-        dt = ((double)currentTime - (double)m_LastDriftTime) / CLOCKS_PER_SEC;
-        m_LastDriftTime = currentTime;
-    }
-    drift(dt);
-    diffuse(dt);
+    drift();
+    diffuse();
     measure();
 }
 
@@ -211,9 +200,9 @@ void ParticleFilter<StateType>::drift(geometry_msgs::Vector3 linear, geometry_ms
 }
 
 template <class StateType>
-void ParticleFilter<StateType>::diffuse(double dt) {
+void ParticleFilter<StateType>::diffuse() {
   for (unsigned int i = 0; i < m_NumParticles; i++) {
-    m_MovementModel->diffuse(m_CurrentList[i]->m_State, dt);
+    m_MovementModel->diffuse(m_CurrentList[i]->m_State);
   }
 }
 

@@ -56,7 +56,7 @@ class MovementModel {
      * @param state Reference to the state that has to be manipulated.
      * @param dt time that has passed since the last filter update in seconds.
      */
-    virtual void diffuse(StateType& state, double dt) const = 0;
+    virtual void diffuse(StateType& state) const = 0;
 
   private:
 
