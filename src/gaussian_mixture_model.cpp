@@ -228,7 +228,7 @@ namespace gmms {
       return gmm_string.str();
   }
 
-  visualization_msgs::Marker GaussianMixtureModel::generateMarker(float x0, float y0, float x1, float y1, int stepcount, std::string n_space, ros::Duration lifetime) const{
+  visualization_msgs::Marker GaussianMixtureModel::generateMarker(float x0, float y0, float x1, float y1, int stepcount, std::string n_space, ros::Duration lifetime, bool use_color, bool use_height) const{
       assert(x0 < x1);
       assert(y0 < y1);
       Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(stepcount, stepcount);
@@ -252,6 +252,10 @@ namespace gmms {
       marker.scale.y = 0.05;
       marker.scale.z = 0.05;
       marker.pose.orientation.w = 1;
+      if (! use_color) {
+          marker.color.b = 1;
+          marker.color.a = .8;
+      }
       // TODO: save stepsize (in Gaussian, too)
 
       for (int y_step = 0; y_step < stepcount; y_step++) {
@@ -261,14 +265,20 @@ namespace gmms {
               geometry_msgs::Point point;
               point.x = x;
               point.y = y;
-              point.z = matrix(y_step, x_step);
+              if (use_height) {
+                point.z = matrix(y_step, x_step);
+              } else {
+                  point.z = 0;
+              }
               marker.points.push_back(point);
-              std_msgs::ColorRGBA color;
-              color.a = .8;
-              color.b = 0;
-              color.g = (1 - matrix(y_step, x_step));
-              color.r = matrix(y_step, x_step);
-              marker.colors.push_back(color);
+              if (use_color) {
+                  std_msgs::ColorRGBA color;
+                  color.a = .8;
+                  color.b = 0;
+                  color.g = (1 - matrix(y_step, x_step));
+                  color.r = matrix(y_step, x_step);
+                  marker.colors.push_back(color);
+              }
           }
       }
       return marker;
