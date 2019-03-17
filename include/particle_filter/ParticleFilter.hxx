@@ -320,10 +320,10 @@ void ParticleFilter<StateType>::setMarkerNamespace(std::string marker_namespace)
 }
 
 template <class StateType>
-gmms::GaussianMixtureModel ParticleFilter<StateType>::getGMM(int number_of_components) {
-    gmms::GaussianMixtureModel gmm(number_of_components);  // TODO: add params for delta and iterations
+gmms::GaussianMixtureModel ParticleFilter<StateType>::getGMM(int num_components, const double delta, const int num_iterations, const bool ignore_explorers) {
+    gmms::GaussianMixtureModel gmm(num_components, delta, num_iterations);
     Eigen::MatrixXd dataset;
-    StateType::convertParticleListToEigen(m_CurrentList, dataset);
+    StateType::convertParticleListToEigen(m_CurrentList, dataset, ignore_explorers);
     gmm.initialize(dataset);
     gmm.expectationMaximization(dataset);
     return gmm;

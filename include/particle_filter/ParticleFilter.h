@@ -370,7 +370,7 @@ class ParticleFilter {
 
     void setMarkerNamespace(std::string);
 
-    gmms::GaussianMixtureModel getGMM(int number_of_components);
+    gmms::GaussianMixtureModel getGMM(int num_components, const double delta = 0.01, const int num_iterations = 100, const bool ignore_explorers = true);
 
   protected:
 
