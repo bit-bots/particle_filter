@@ -45,6 +45,7 @@ class GaussianMixtureModel {
   double logLikelihood(const Eigen::MatrixXd &dataset);
   double bayesianInformationCriterion(const Eigen::MatrixXd &dataset);
   void load(Eigen::MatrixXd model);
+  GaussianMixtureModel copy() const;
   Eigen::MatrixXd save();
 
   inline void load(const std::string filename) {
@@ -69,6 +70,10 @@ class GaussianMixtureModel {
   inline double delta() const { return delta_; }
   inline void setDelta(const double delta) { delta_ = delta; }
   inline int numIterations() const { return num_iterations_; }
+  inline bool initialized() const { return initialized_; }
+  inline Eigen::MatrixXd expectations() const { return expectations_; }
+  inline std::vector<double> priorVec() const { return prior_vec_; }
+  inline std::vector<Gaussian> gaussianVec() const { return gaussian_vec_; }
   inline void setNumIterations(const int num_iterations) {
     num_iterations_ = num_iterations;
   }
@@ -105,6 +110,21 @@ class GaussianMixtureModel {
   Eigen::MatrixXd expectations_;
   std::vector<double> prior_vec_;
   std::vector<Gaussian> gaussian_vec_;
+
+  GaussianMixtureModel(int num_components,
+                       double delta,
+                       int num_iterations,
+                       std::vector<double> prior_vec_,
+                       std::vector<Gaussian> gaussian_vec_,
+                       Eigen::MatrixXd expectations_) {
+    num_components_ = num_components;
+    prior_vec_ = std::vector<double>(prior_vec_);
+    gaussian_vec_ = std::vector<Gaussian>(gaussian_vec_);
+    expectations_ = expectations_.replicate(1, 1);
+    delta_ = delta;
+    num_iterations_ = num_iterations;
+    initialized_ = false;
+  }
 
   inline double probability_density_function(const Eigen::VectorXd point) {
     double probability = 0;

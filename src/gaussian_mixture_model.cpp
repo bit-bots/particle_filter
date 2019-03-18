@@ -170,6 +170,10 @@ namespace gmms {
     return bic;
   }
 
+  GaussianMixtureModel GaussianMixtureModel::copy() const {
+      return GaussianMixtureModel(num_components_, delta_, num_iterations_, prior_vec_, gaussian_vec_, expectations_);
+  }
+
   void GaussianMixtureModel::load(Eigen::MatrixXd model) {
     int idx = 0;
     // covariance rows plus one mean and prior
