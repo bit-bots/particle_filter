@@ -63,7 +63,7 @@ namespace gmms {
       throw std::runtime_error(notinitialized_());
     }
 
-    double old_log_likelihood = logLikelihood(dataset);
+    double old_log_likelihood;
     double log_likelihood = 0.0;
     double delta = 0.0;
     int iteration = 0;

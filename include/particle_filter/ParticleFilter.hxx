@@ -309,13 +309,52 @@ void ParticleFilter<StateType>::setMarkerNamespace(std::string marker_namespace)
 }
 
 template <class StateType>
-gmms::GaussianMixtureModel ParticleFilter<StateType>::getGMM(int num_components, const double delta, const int num_iterations, const bool ignore_explorers) {
+gmms::GaussianMixtureModel ParticleFilter<StateType>::getGMM(
+        int num_components,
+        const double delta,
+        const int num_iterations,
+        const bool ignore_explorers) {
+    assert(num_components >= 1);
     gmms::GaussianMixtureModel gmm(num_components, delta, num_iterations);
     Eigen::MatrixXd dataset;
     StateType::convertParticleListToEigen(m_CurrentList, dataset, ignore_explorers);
     gmm.initialize(dataset);
     gmm.expectationMaximization(dataset);
     return gmm;
+}
+
+template <class StateType>
+gmms::GaussianMixtureModel ParticleFilter<StateType>::getDynGMM(
+        int min_num_components,
+        int max_num_components,
+        const double component_delta,
+        const double iteration_delta,
+        const int num_iterations,
+        const bool ignore_explorers) {
+    assert(min_num_components < max_num_components);
+
+    // set up dataset
+    Eigen::MatrixXd dataset;
+    StateType::convertParticleListToEigen(m_CurrentList, dataset, ignore_explorers);
+
+    gmms::GaussianMixtureModel last_gmm;
+    int component_count = 0;
+    int component_number = min_num_components;
+    double old_log_likelihood;
+    double log_likelihood = 0.0;
+    do {
+        component_number = min_num_components + component_count;
+        old_log_likelihood = log_likelihood;
+
+        last_gmm = gmms::GaussianMixtureModel(component_number, iteration_delta, num_iterations);
+        last_gmm.initialize(dataset);
+        last_gmm.expectationMaximization(dataset);
+
+        log_likelihood = last_gmm.logLikelihood(dataset);
+        component_count ++;
+    } while (component_number < max_num_components and std::abs(old_log_likelihood - log_likelihood) > component_delta);
+
+    return last_gmm;
 }
 
 
