@@ -95,7 +95,7 @@ class GaussianMixtureModel {
   }
   std::string toString() const;
 
-  visualization_msgs::Marker generateMarker(float x0, float y0, float x1, float y1, int stepcount, std::string n_space, ros::Duration lifetime, bool use_color = true, bool use_height = true) const;
+  visualization_msgs::Marker renderMarker(float x0, float y0, float x1, float y1, int stepcount, std::string n_space, std::string frame, ros::Duration lifetime, bool use_color = true, bool use_height = true) const;
 
  private:
   bool initialized_;
