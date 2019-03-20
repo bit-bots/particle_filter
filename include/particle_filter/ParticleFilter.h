@@ -5,6 +5,7 @@
 #include <cassert>
 #include <limits>
 #include <memory>
+#include <ros/ros.h>
 
 #include <Eigen/Core>
 
