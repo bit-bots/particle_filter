@@ -23,8 +23,9 @@
 namespace gmms {
 class GaussianMixtureModel {
  public:
+
   GaussianMixtureModel() {
-    num_components_ = 0;
+    num_components_ = 1;
     delta_ = 0.01;
     num_iterations_ = 100;
     initialized_ = false;
