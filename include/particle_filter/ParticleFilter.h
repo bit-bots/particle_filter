@@ -5,6 +5,8 @@
 #include <cassert>
 #include <limits>
 #include <memory>
+#include <string>
+
 #include <ros/ros.h>
 
 #include <Eigen/Core>
@@ -21,6 +23,7 @@
 
 #include <visualization_msgs/Marker.h>
 #include <geometry_msgs/Vector3.h>
+#include <std_msgs/ColorRGBA.h>
 
 namespace particle_filter
 {
@@ -361,15 +364,7 @@ class ParticleFilter {
      */
     ConstParticleIterator particleListEnd();
 
-    visualization_msgs::Marker renderMarker();
-
-    void setMarkerLifetime(ros::Duration lifetime);
-
-    void setMarkerColor(float r, float g, float b, float a);
-
-    void setMarkerColor(std_msgs::ColorRGBA color);
-
-    void setMarkerNamespace(std::string);
+    visualization_msgs::Marker renderPointsMarker(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color);
 
     gmms::GaussianMixtureModel getGMM(
             int num_components,
@@ -432,12 +427,6 @@ class ParticleFilter {
 
     // Stores which resampling mode is set, default is ResamplingMode::RESAMPLE_NEFF
     ResamplingMode m_ResamplingMode;
-
-    std_msgs::ColorRGBA color_;
-
-    ros::Duration marker_lifetime_;
-
-    std::string marker_namespace_;
 
 };
 

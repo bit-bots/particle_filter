@@ -8,9 +8,7 @@ ParticleFilter<StateType>::ParticleFilter(unsigned int numParticles, std::shared
     m_ObservationModel(os),
     m_MovementModel(ms),
     m_FirstRun(true),
-    m_ResamplingMode(RESAMPLE_NEFF),
-    marker_lifetime_(.1), //initializing marker lifetime with 10 Hz by default
-    marker_namespace_("")
+    m_ResamplingMode(RESAMPLE_NEFF)
 {
   m_ResamplingStrategy.reset(new ImportanceResampling<StateType>());
 
@@ -19,10 +17,6 @@ ParticleFilter<StateType>::ParticleFilter(unsigned int numParticles, std::shared
   // allocate memory for particle lists
   m_CurrentList.resize(numParticles);
   m_LastList.resize(numParticles);
-
-  // red by default
-  color_.r = 1.0;
-  color_.a = 1.0;
 
   double initialWeight = 1.0 / numParticles;
   // fill particle lists
@@ -151,8 +145,8 @@ double ParticleFilter<StateType>::getWeight(unsigned int particleNo) const {
 
 
 template <class StateType>
-visualization_msgs::Marker ParticleFilter<StateType>::renderMarker(){
-    return StateType::renderMarker(m_CurrentList, color_, marker_lifetime_, marker_namespace_);
+visualization_msgs::Marker ParticleFilter<StateType>::renderPointsMarker(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color){
+    return StateType::renderPointsMarker(m_CurrentList, n_space, frame, lifetime, color);
 }
 
 template <class StateType>
@@ -283,29 +277,6 @@ template <class StateType>
 typename ParticleFilter<StateType>::ConstParticleIterator ParticleFilter<StateType>::particleListEnd()
 {
     return m_CurrentList.end();
-}
-
-template <class StateType>
-void ParticleFilter<StateType>::setMarkerColor(float r, float g, float b, float a) {
-    color_.r = r;
-    color_.g = g;
-    color_.b = b;
-    color_.a = a;
-}
-
-template <class StateType>
-void ParticleFilter<StateType>::setMarkerColor(std_msgs::ColorRGBA color) {
-    color_ = color;
-}
-
-template <class StateType>
-void ParticleFilter<StateType>::setMarkerLifetime(ros::Duration lifetime) {
-    marker_lifetime_ = lifetime;
-}
-
-template <class StateType>
-void ParticleFilter<StateType>::setMarkerNamespace(std::string marker_namespace) {
-    marker_namespace_ = marker_namespace;
 }
 
 template <class StateType>
