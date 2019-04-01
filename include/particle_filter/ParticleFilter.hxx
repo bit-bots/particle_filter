@@ -143,12 +143,6 @@ double ParticleFilter<StateType>::getWeight(unsigned int particleNo) const {
     return m_CurrentList[particleNo]->getWeight();
 }
 
-
-template <class StateType>
-visualization_msgs::Marker ParticleFilter<StateType>::renderPointsMarker(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color){
-    return StateType::renderPointsMarker(m_CurrentList, n_space, frame, lifetime, color);
-}
-
 template <class StateType>
 void ParticleFilter<StateType>::sort() {
   std::sort(m_CurrentList.begin(), m_CurrentList.end(), CompareParticleWeights<StateType>());
@@ -195,6 +189,7 @@ void ParticleFilter<StateType>::drift(geometry_msgs::Vector3 linear, geometry_ms
 
 template <class StateType>
 void ParticleFilter<StateType>::diffuse() {
+#pragma parallel for
   for (unsigned int i = 0; i < m_NumParticles; i++) {
     m_MovementModel->diffuse(m_CurrentList[i]->m_State);
   }
@@ -207,9 +202,10 @@ void ParticleFilter<StateType>::measure() {
     //    return;
     //    currently, this results in a problem, as the particle weight does not decay
     }
+  double weight;
+#pragma parallel for
   for (unsigned int i = 0; i < m_NumParticles; i++) {
     // apply observation model
-    double weight;
 
     // set explorer particle weight to minimal value if there are no measurements available to reduce noise
     if (m_CurrentList[i]->is_explorer_ && !m_ObservationModel->measurements_available()) {
@@ -277,6 +273,22 @@ template <class StateType>
 typename ParticleFilter<StateType>::ConstParticleIterator ParticleFilter<StateType>::particleListEnd()
 {
     return m_CurrentList.end();
+}
+
+template <class StateType>
+visualization_msgs::Marker ParticleFilter<StateType>::renderPointsMarker(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color){
+    return StateType::renderPointsMarker(m_CurrentList, n_space, frame, lifetime, color);
+}
+
+template <class StateType>
+visualization_msgs::MarkerArray ParticleFilter<StateType>::renderMarkerArray(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color){
+    visualization_msgs::MarkerArray marker_array;
+
+    for (unsigned int i = 0; i < m_NumParticles; i++) {
+        marker_array.markers.push_back(m_CurrentList[i]->renderMarker(n_space, frame, lifetime, color));
+    }
+
+    return marker_array;
 }
 
 template <class StateType>

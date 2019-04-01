@@ -22,6 +22,7 @@
 #include <particle_filter/gaussian_mixture_model.h>
 
 #include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 #include <geometry_msgs/Vector3.h>
 #include <std_msgs/ColorRGBA.h>
 
@@ -365,6 +366,8 @@ class ParticleFilter {
     ConstParticleIterator particleListEnd();
 
     visualization_msgs::Marker renderPointsMarker(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color);
+
+    visualization_msgs::MarkerArray renderMarkerArray(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color);
 
     gmms::GaussianMixtureModel getGMM(
             int num_components,
