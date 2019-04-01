@@ -12,5 +12,4 @@ typedef struct GMM {
 };
 
 
-
-#endif //BITBOTS_WORLD_MODEL_CLUSTERIZER_H
+#endif  // BITBOTS_WORLD_MODEL_CLUSTERIZER_H

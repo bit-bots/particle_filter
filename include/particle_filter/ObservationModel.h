@@ -3,8 +3,7 @@
 
 #include <cmath>
 
-namespace particle_filter
-{
+namespace particle_filter {
 
 /**
  * @class ObservationModel
@@ -13,14 +12,14 @@ namespace particle_filter
  *
  * The observation model in a particle filter defines the measurement process
  * that is used to weighten the particles according to their state.
- * It is used in the measurement step of the particle filter particle_filter::ParticleFilter::measure()
- * (strategy pattern).
- * To define an observation model, create a sub-class of this class, specializing the
+ * It is used in the measurement step of the particle filter
+ * particle_filter::ParticleFilter::measure() (strategy pattern). To define an
+ * observation model, create a sub-class of this class, specializing the
  * measurement method and the state type to use (with specializing the
- * template). The measurement method takes a reference to a state as an argument.
- * Use this reference to extract the state's variables and use your measurement
- * function to compute a state-dependent weight. The weight has to be a positive,
- * non-zero value.
+ * template). The measurement method takes a reference to a state as an
+ * argument. Use this reference to extract the state's variables and use your
+ * measurement function to compute a state-dependent weight. The weight has to
+ * be a positive, non-zero value.
  *
  * @author Stephan Wirth
  * @see ParticleFilter
@@ -29,9 +28,7 @@ namespace particle_filter
 
 template <class StateType>
 class ObservationModel {
-
-  public:
-
+public:
     /**
      * The destructor is empty.
      */
@@ -51,14 +48,11 @@ class ObservationModel {
     // virtual void clear_measurement();
     virtual double get_min_weight() const = 0;
 
-  private:
-
+private:
 };
 
 template <class StateType>
-ObservationModel<StateType>::~ObservationModel() {
-}
+ObservationModel<StateType>::~ObservationModel() {}
 
-} // end of namespace
+}  // namespace particle_filter
 #endif
-

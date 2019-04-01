@@ -3,8 +3,7 @@
 
 #include "particle_filter/RandomNumberGenerationStrategy.h"
 
-namespace particle_filter
-{
+namespace particle_filter {
 
 /**
  * @class CRandomNumberGenerator
@@ -18,9 +17,7 @@ namespace particle_filter
  * @author Stephan Wirth
  */
 class CRandomNumberGenerator : public RandomNumberGenerationStrategy {
-
-  public:
-
+public:
     /**
      * The constructor calls init().
      */
@@ -32,8 +29,10 @@ class CRandomNumberGenerator : public RandomNumberGenerationStrategy {
     ~CRandomNumberGenerator();
 
     /**
-     * This method creates gaussian distributed random numbers (Box-Müller method).
-     * @param standardDeviation Standard deviation d of the random number to generate.
+     * This method creates gaussian distributed random numbers (Box-Müller
+     * method).
+     * @param standardDeviation Standard deviation d of the random number to
+     * generate.
      * @return N(0, d*d)-distributed random number
      */
     double getGaussian(double standardDeviation) const;
@@ -46,24 +45,21 @@ class CRandomNumberGenerator : public RandomNumberGenerationStrategy {
      */
     double getUniform(double min = 0.0, double max = 1.0) const;
 
-  protected:
-
+protected:
     /**
      * Initializes the seed by calling srand(time(0))
      */
     void init();
 
-  private:
-
+private:
     /// stores if there is a buffered gaussian variable or not
     mutable bool m_GaussianBufferFilled;
 
     /// buffer for a gaussian distributed variable, the Box-Müller method always
     /// creates two variables, we return one and store the other here.
     mutable double m_GaussianBufferVariable;
-
 };
 
-} // end of namespace
+}  // namespace particle_filter
 
-#endif // RANDOMNUMBERGENERATOR_H
+#endif  // RANDOMNUMBERGENERATOR_H

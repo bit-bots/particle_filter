@@ -1,33 +1,37 @@
 #ifndef PARTICLEFILTER_H
 #define PARTICLEFILTER_H
-#include <iostream>
-#include <ctime> // for time measurement
+
+#include <omp.h>
+
 #include <cassert>
+#include <ctime>  // for time measurement
+#include <iostream>
 #include <limits>
 #include <memory>
 #include <string>
 
+#include <ros/console.h>
 #include <ros/ros.h>
 
 #include <Eigen/Core>
 
-#include <particle_filter/ObservationModel.h>
-#include <particle_filter/MovementModel.h>
-#include <particle_filter/ResamplingStrategy.h>
-#include <particle_filter/ImportanceResampling.h>
 #include <particle_filter/CompareParticleWeights.h>
+#include <particle_filter/ImportanceResampling.h>
+#include <particle_filter/MovementModel.h>
+#include <particle_filter/ObservationModel.h>
 #include <particle_filter/Particle.h>
+#include <particle_filter/ResamplingStrategy.h>
 #include <particle_filter/StateDistribution.h>
 
 #include <particle_filter/gaussian_mixture_model.h>
 
-#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/MarkerArray.h>
+
 #include <geometry_msgs/Vector3.h>
 #include <std_msgs/ColorRGBA.h>
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 
-namespace particle_filter
-{
+namespace particle_filter {
 
 /**
  * @class ParticleFilter
@@ -36,30 +40,34 @@ namespace particle_filter
  *
  * @brief (Templated) class that defines a particle filter.
  *
- * A particle filter is a descrete method to describe and compute with a probability distribution.
- * In other words, it is an implementation of a recursive Bayesian filter by Monte Carlo Methods.
- * The sequential importance sampling (SIS) used is also known as bootstrap filtering, the
- * condensation algorithm, particle filtering, interacting particle approximations and survival
- * of the fittest.
- * This template class implements the basic methods for a particle filter.
- * The changeable parts of the particle filter are implemented using the strategy pattern. If you
- * don't know what it is, you should read something about it, as it is used in many methods here.
+ * A particle filter is a descrete method to describe and compute with a
+ * probability distribution. In other words, it is an implementation of a
+ * recursive Bayesian filter by Monte Carlo Methods. The sequential importance
+ * sampling (SIS) used is also known as bootstrap filtering, the condensation
+ * algorithm, particle filtering, interacting particle approximations and
+ * survival of the fittest. This template class implements the basic methods for
+ * a particle filter. The changeable parts of the particle filter are
+ * implemented using the strategy pattern. If you don't know what it is, you
+ * should read something about it, as it is used in many methods here.
  *
- * The following strategies are used by ParticleFilter, all of them can be switched at runtime.
+ * The following strategies are used by ParticleFilter, all of them can be
+ * switched at runtime.
  * @li ObservationModel defines how a state can be evaluated (weighted)
  * @li MovementModel defines how a state will be propagated during time
- * @li ResamplingStrategy defines how resampling occurs (see ImportanceResampling for the default implementation)
+ * @li ResamplingStrategy defines how resampling occurs (see
+ * ImportanceResampling for the default implementation)
  *
  *
  * You must do the following to use the particle filter:
- * @li Create a class for the state that you want to track with the ParticleFilter.
- *     Let's name your state MyState.  The state has to implement the operator
+ * @li Create a class for the state that you want to track with the
+ * ParticleFilter. Let's name your state MyState.  The state has to implement
+ * the operator
  *     @code
  *       operator=(const MyState& other);
  *     @endcode
- *     because a particle filter copies the "fittest" states in a resampling step.
- *     If you want to use the methods getBestXPercentEstimate() or getMmseEstimate(),
- *     your state has to implement two more operators:
+ *     because a particle filter copies the "fittest" states in a resampling
+ * step. If you want to use the methods getBestXPercentEstimate() or
+ * getMmseEstimate(), your state has to implement two more operators:
  *     @code
  *       MyState operator*(float factor) const;
  *     @endcode
@@ -69,14 +77,15 @@ namespace particle_filter
  *     @endcode
  *     These operators allow the ParticleFilter to compute the weighted average
  *     of a set of states.
- *     Instead of creating your own state, you may use a basic datatype as state,
- *     for example to create a <tt>ParticleFilter<float></tt> is perfectly possible.
- * @li The next step is to create an observation strategy MyObservationModel for your state, deriving
- *     it from ObservationModel<MyState> and implementing the method
- *     ObservationModel::measure().
- * @li Create a movement strategy MyMovementModel for your state, deriving it from
- *     MovementModel<MyState> and implement the methods MovementModel::diffuse()
- *     and MovementModel::drift().
+ *     Instead of creating your own state, you may use a basic datatype as
+ * state, for example to create a <tt>ParticleFilter<float></tt> is perfectly
+ * possible.
+ * @li The next step is to create an observation strategy MyObservationModel for
+ * your state, deriving it from ObservationModel<MyState> and implementing the
+ * method ObservationModel::measure().
+ * @li Create a movement strategy MyMovementModel for your state, deriving it
+ * from MovementModel<MyState> and implement the methods
+ * MovementModel::diffuse() and MovementModel::drift().
  *
  * After that you can use the particle filter this way:
  * @code
@@ -134,8 +143,9 @@ namespace particle_filter
  *   pf.drawAllFromDistribution(distribution);
  * @endcode
  *
- * To traverse the particle list, you may use particleListBegin() and particleListEnd()
- * which return iterators to the beginning and to the end of the list respectively.
+ * To traverse the particle list, you may use particleListBegin() and
+ * particleListEnd() which return iterators to the beginning and to the end of
+ * the list respectively.
  *
  * @see Particle
  * @see ObservationModel
@@ -144,10 +154,9 @@ namespace particle_filter
  */
 
 /**
-  * Resampling modes.
-  */
-enum ResamplingMode
-{
+ * Resampling modes.
+ */
+enum ResamplingMode {
     /// never resample,
     RESAMPLE_NEVER,
     /// always resample
@@ -158,13 +167,11 @@ enum ResamplingMode
 
 template <class StateType>
 class ParticleFilter {
-
-  public:
-
+public:
     /**
      * A ParticleList is an array of pointers to Particles.
      */
-    typedef std::vector< Particle<StateType>* > ParticleList;
+    typedef std::vector<Particle<StateType>*> ParticleList;
 
     /**
      * Typedef for an iterator over particles
@@ -178,17 +185,19 @@ class ParticleFilter {
 
     /**
      * The constructor allocates the memory for the particle lists and saves
-     * <b>pointers</b> to ObservationModel and MovementModel in member variables.
-     * Be sure that these objects are valid through the lifetime of ParticleFilter!
-     * The default constructor of StateType will be used to create the
-     * initial particles.
-     * The particle lists will have @a numParticles elements of type StateType.
+     * <b>pointers</b> to ObservationModel and MovementModel in member
+     * variables. Be sure that these objects are valid through the lifetime of
+     * ParticleFilter! The default constructor of StateType will be used to
+     * create the initial particles. The particle lists will have @a
+     * numParticles elements of type StateType.
      * @param numParticles Number of particles for the filter. Has to be greater
      *        than zero.
      * @param os ObservationModel to use for weightening particles
      * @param ms MovementModel to use for propagation of particles
      */
-    ParticleFilter<StateType>(unsigned int numParticles, std::shared_ptr<ObservationModel<StateType>> os, std::shared_ptr<MovementModel<StateType>> ms);
+    ParticleFilter<StateType>(unsigned int numParticles,
+            std::shared_ptr<ObservationModel<StateType>> os,
+            std::shared_ptr<MovementModel<StateType>> ms);
 
     /**
      * The destructor releases the particle lists.
@@ -223,12 +232,14 @@ class ParticleFilter {
     /**
      * @param rs new resampling strategy
      */
-    void setResamplingStrategy(std::shared_ptr<ResamplingStrategy<StateType>> rs);
+    void
+    setResamplingStrategy(std::shared_ptr<ResamplingStrategy<StateType>> rs);
 
     /**
      * @return the resampling strategy the particle filter currently uses
      */
-    std::shared_ptr<ResamplingStrategy<StateType>> getResamplingStrategy() const;
+    std::shared_ptr<ResamplingStrategy<StateType>>
+    getResamplingStrategy() const;
 
     /**
      * Changes the resampling mode
@@ -243,10 +254,8 @@ class ParticleFilter {
 
     /**
      * Computes and returns the number of effective particles.
-     * @return The estimated number of effective particles according to the formula:
-     * \f[
-     *     N_{eff} = \frac{1}{\sum_{i=1}^{N_s} (w_k^i)^2}
-     * \f]
+     * @return The estimated number of effective particles according to the
+     * formula: \f[ N_{eff} = \frac{1}{\sum_{i=1}^{N_s} (w_k^i)^2} \f]
      */
     unsigned int getNumEffectiveParticles() const;
 
@@ -261,7 +270,8 @@ class ParticleFilter {
      * Draws all particle states from the given distribution.
      * @param distribution The state distribution to draw the states from.
      */
-    void drawAllFromDistribution(const std::shared_ptr<StateDistribution<StateType>>& distribution);
+    void drawAllFromDistribution(
+            const std::shared_ptr<StateDistribution<StateType>>& distribution);
 
     /**
      * Resets the filter timer. Call this function after pausing the filter
@@ -292,8 +302,8 @@ class ParticleFilter {
      * resetTimer().
      * The functions resample(),
      * drift(), diffuse() and measure() are called.
-     * @param dt time interval to use for filtering. If negative, the time interval
-     *        will be calculated (time since last call of filter())
+     * @param dt time interval to use for filtering. If negative, the time
+     * interval will be calculated (time since last call of filter())
      */
     void filter();
 
@@ -312,7 +322,8 @@ class ParticleFilter {
     const StateType& getState(unsigned int particleNo) const;
 
     /**
-     * Returns the "mean" state, i.e. the sum of the weighted states. You can use this only if you implemented operator*(double) and
+     * Returns the "mean" state, i.e. the sum of the weighted states. You can
+     * use this only if you implemented operator*(double) and
      * operator+=(MyState) in your derived State MyState.
      * @return "mean" state. Best estimation.
      */
@@ -328,12 +339,14 @@ class ParticleFilter {
     StateType getBestXPercentEstimate(float x) const;
 
     /**
-     * This method selects a new set of particles out of an old set according to their weight
-     * (importance resampling). The particles from the list m_CurrentList points to are used as source,
-     * m_LastList points to the destination list. The pointers m_CurrentList and m_LastList are switched.
-     * The higher the weight of a particle, the more particles are drawn (copied) from this particle.
-     * The weight remains untouched, because measure() will be called afterwards.
-     * This method only works on a sorted m_CurrentList, therefore sort() is called first.
+     * This method selects a new set of particles out of an old set according to
+     * their weight (importance resampling). The particles from the list
+     * m_CurrentList points to are used as source, m_LastList points to the
+     * destination list. The pointers m_CurrentList and m_LastList are switched.
+     * The higher the weight of a particle, the more particles are drawn
+     * (copied) from this particle. The weight remains untouched, because
+     * measure() will be called afterwards. This method only works on a sorted
+     * m_CurrentList, therefore sort() is called first.
      */
     void resample();
 
@@ -345,13 +358,14 @@ class ParticleFilter {
     void drift(geometry_msgs::Vector3 linear, geometry_msgs::Vector3 angular);
 
     /**
-     * This method "diffuses" the particles using the movement model of the particle filter to add a small jitter
-     * to the particle states.
+     * This method "diffuses" the particles using the movement model of the
+     * particle filter to add a small jitter to the particle states.
      */
     void diffuse();
 
     /**
-     * This method assigns weights to the particles using the observation model of the particle filter.
+     * This method assigns weights to the particles using the observation model
+     * of the particle filter.
      */
     virtual void measure();
 
@@ -365,46 +379,51 @@ class ParticleFilter {
      */
     ConstParticleIterator particleListEnd();
 
-    visualization_msgs::Marker renderPointsMarker(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color);
+    visualization_msgs::Marker renderPointsMarker(std::string n_space,
+            std::string frame,
+            ros::Duration lifetime,
+            std_msgs::ColorRGBA color);
 
-    visualization_msgs::MarkerArray renderMarkerArray(std::string n_space, std::string frame, ros::Duration lifetime, std_msgs::ColorRGBA color);
+    visualization_msgs::MarkerArray renderMarkerArray(std::string n_space,
+            std::string frame,
+            ros::Duration lifetime,
+            std_msgs::ColorRGBA color);
 
-    gmms::GaussianMixtureModel getGMM(
-            int num_components,
+    gmms::GaussianMixtureModel getGMM(int num_components,
             const double delta = 0.01,
             const int num_iterations = 100,
             const bool ignore_explorers = true);
 
-    gmms::GaussianMixtureModel getDynGMM(
-            int min_num_components,
+    gmms::GaussianMixtureModel getDynGMM(int min_num_components,
             int max_num_components,
             const double component_delta,
             const double iteration_delta = 0.01,
             const int num_iterations = 100,
             const bool ignore_explorers = true);
 
-  protected:
-
+protected:
     /**
-     * This method sorts the particles according to their weight. STL's std::sort() is used together with the
-     * custom compare function CompareParticleWeights().
-     * The particle with the highest weight is at position 0 after calling this function.
+     * This method sorts the particles according to their weight. STL's
+     * std::sort() is used together with the custom compare function
+     * CompareParticleWeights(). The particle with the highest weight is at
+     * position 0 after calling this function.
      */
     void sort();
 
     /**
-     * This method normalizes the weights of the particles. After calling this function, the sum of the weights of
-     * all particles in the current particle list equals 1.0.
-     * In this function the sum of all weights of the particles of the current particle list is computed and each
-     * weight of each particle is devided through this sum.
+     * This method normalizes the weights of the particles. After calling this
+     * function, the sum of the weights of all particles in the current particle
+     * list equals 1.0. In this function the sum of all weights of the particles
+     * of the current particle list is computed and each weight of each particle
+     * is devided through this sum.
      */
     void normalize();
 
-  private:
-
+private:
     // Particle lists.
-    // The particles are drawn from m_LastList to m_CurrentList to avoid new and delete commands.
-    // In each run, the pointers m_CurrentList and m_LastList are switched in resample().
+    // The particles are drawn from m_LastList to m_CurrentList to avoid new and
+    // delete commands. In each run, the pointers m_CurrentList and m_LastList
+    // are switched in resample().
     ParticleList m_CurrentList;
     ParticleList m_LastList;
 
@@ -428,15 +447,14 @@ class ParticleFilter {
     // Flag that stores if the filter has run once or not)
     bool m_FirstRun;
 
-    // Stores which resampling mode is set, default is ResamplingMode::RESAMPLE_NEFF
+    // Stores which resampling mode is set, default is
+    // ResamplingMode::RESAMPLE_NEFF
     ResamplingMode m_ResamplingMode;
-
 };
 
-} // end of namespace
+}  // namespace particle_filter
 
 // include template implementation
 #include "ParticleFilter.hxx"
 
 #endif
-

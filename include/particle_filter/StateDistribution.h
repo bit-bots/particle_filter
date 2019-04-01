@@ -1,7 +1,6 @@
 #ifndef STATEDISTRIBUTION_H
 #define STATEDISTRIBUTION_H
-namespace particle_filter
-{
+namespace particle_filter {
 
 /**
  * @class StateDistribution
@@ -11,7 +10,8 @@ namespace particle_filter
  * To initialize or reset a particle filter, you may need to use a state
  * distribution to draw your states from. For example, if you do tracking of a
  * position (x, y) in an image a StateDistribution may be used to draw random
- * positions of valid pixels from {(x, y) | x in {0;width-1}, y in {0, height-1}}
+ * positions of valid pixels from {(x, y) | x in {0;width-1}, y in {0,
+ * height-1}}
  *
  * Use this class as base class for your state distribution and you can use
  * the method ParticleFilter::drawAllFromDistribution().
@@ -22,8 +22,7 @@ namespace particle_filter
 
 template <class StateType>
 class StateDistribution {
-
-  public:
+public:
     /**
      * The constructor of this base class is empty.
      */
@@ -43,19 +42,16 @@ class StateDistribution {
      */
     virtual const StateType draw() const = 0;
 
-  private:
-
+private:
 };
 
 
 template <class StateType>
-StateDistribution<StateType>::StateDistribution() {
-}
+StateDistribution<StateType>::StateDistribution() {}
 
 template <class StateType>
-StateDistribution<StateType>::~StateDistribution() {
-}
+StateDistribution<StateType>::~StateDistribution() {}
 
-} // end of namespace
+}  // namespace particle_filter
 
-#endif // STATEDISTRIBUTION_H
+#endif  // STATEDISTRIBUTION_H

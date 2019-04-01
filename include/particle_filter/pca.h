@@ -8,35 +8,40 @@
 #ifndef _PCA_H_
 #define _PCA_H_
 
-#include <vector>
 #include <Eigen/Core>
+#include <vector>
 
 namespace gmms {
 class PCA {
- public:
-  // constructors
-  PCA() {
-    num_components_ = 0;
-  }
-  PCA(const int num_components) {
-    num_components_ = num_components;
-  }
+public:
+    // constructors
+    PCA() {
+        num_components_ = 0;
+    }
+    PCA(const int num_components) {
+        num_components_ = num_components;
+    }
 
-  // setters & getters
-  inline void setNumComponents(const int num_components) { num_components_ = num_components; }
-  inline int numComponents() const { return num_components_; }
+    // setters & getters
+    inline void setNumComponents(const int num_components) {
+        num_components_ = num_components;
+    }
+    inline int numComponents() const {
+        return num_components_;
+    }
 
-  // useful methods
-  // dataset with each datapoint per row and each dimension per column
-  inline Eigen::MatrixXd pca(const Eigen::MatrixXd& dataset) {
-    double variance_retained = 0.0;
-    return pca(dataset, variance_retained);
-  }
-  Eigen::MatrixXd pca(const Eigen::MatrixXd& dataset, double& retained_variance);
-  
- private:
-  int num_components_;
+    // useful methods
+    // dataset with each datapoint per row and each dimension per column
+    inline Eigen::MatrixXd pca(const Eigen::MatrixXd& dataset) {
+        double variance_retained = 0.0;
+        return pca(dataset, variance_retained);
+    }
+    Eigen::MatrixXd
+    pca(const Eigen::MatrixXd& dataset, double& retained_variance);
+
+private:
+    int num_components_;
 };
-} // namespace gmms
+}  // namespace gmms
 
 #endif  // _PCA_H_

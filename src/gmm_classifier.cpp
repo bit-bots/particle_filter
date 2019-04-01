@@ -5,20 +5,22 @@
 //#                                                       #//
 //#########################################################//
 
-#include <vector>
-#include <set>
-#include <iostream>
-#include <fstream>
-#include <stdexcept>
 #include <Eigen/Core>
+#include <fstream>
+#include <iostream>
+#include <set>
+#include <stdexcept>
+#include <vector>
 
 #include <omp.h>
 
-#include <particle_filter/matrix_io.h>
 #include <particle_filter/gmm_classifier.h>
+#include <particle_filter/matrix_io.h>
 
 namespace gmms {
-  void GMMClassifier::train(const Eigen::MatrixXd &dataset, bool evaluate_bic, int gmm_components) {
+void GMMClassifier::train(const Eigen::MatrixXd& dataset,
+        bool evaluate_bic,
+        int gmm_components) {
     int dataset_size = dataset.rows();
 
     Eigen::VectorXi labels = dataset.rightCols(1).cast<int>();
@@ -33,87 +35,92 @@ namespace gmms {
     input_size_ = training_data.cols();
     int class_idx = 0;
 
-    for (std::vector<int>::iterator it = classes_.begin(); it != classes_.end(); ++it) {
-      Eigen::MatrixXd class_data((labels.array() == *it).count(), training_data.cols());
-      
-      std::cout << "Training class number " << class_idx << ": " << *it << std::endl;
-      std::cout << "\t\tClass data size: " << class_data.rows() << std::endl;
+    for (std::vector<int>::iterator it = classes_.begin(); it != classes_.end();
+            ++it) {
+        Eigen::MatrixXd class_data(
+                (labels.array() == *it).count(), training_data.cols());
 
-      if (class_data.rows() < 10) {
-	std::cerr << notsufficient_() << std::endl;
-	gmm_vec_[class_idx] = nullptr;
-	continue;
-      }
+        std::cout << "Training class number " << class_idx << ": " << *it
+                  << std::endl;
+        std::cout << "\t\tClass data size: " << class_data.rows() << std::endl;
 
-      int class_data_idx = 0;
+        if (class_data.rows() < 10) {
+            std::cerr << notsufficient_() << std::endl;
+            gmm_vec_[class_idx] = nullptr;
+            continue;
+        }
 
-      for (int data_idx = 0; data_idx < labels.size(); ++data_idx) {
-	if (labels(data_idx) == *it) {
-	  class_data.row(class_data_idx++) = training_data.row(data_idx);
-	}
-      }
+        int class_data_idx = 0;
 
-      int num_components;
-      double bic = 0.0;
-      bool first_trial = true;
+        for (int data_idx = 0; data_idx < labels.size(); ++data_idx) {
+            if (labels(data_idx) == *it) {
+                class_data.row(class_data_idx++) = training_data.row(data_idx);
+            }
+        }
 
-      std::cout << "\t\tEvaluate BIC: ";
+        int num_components;
+        double bic = 0.0;
+        bool first_trial = true;
 
-      if (evaluate_bic) {
-	std::cout << "ON" << std::endl;
-	num_components = 1;
-      }
-      else {
-	std::cout << "OFF" << std::endl;
-	num_components = gmm_components;
-      }
+        std::cout << "\t\tEvaluate BIC: ";
+
+        if (evaluate_bic) {
+            std::cout << "ON" << std::endl;
+            num_components = 1;
+        } else {
+            std::cout << "OFF" << std::endl;
+            num_components = gmm_components;
+        }
 
 #pragma parallel for
-      for (int c = num_components; c <= gmm_components; ++c) {
-	std::cout << "\t\t\t\tUsing " << c << " GMM components" << std::endl;
+        for (int c = num_components; c <= gmm_components; ++c) {
+            std::cout << "\t\t\t\tUsing " << c << " GMM components"
+                      << std::endl;
 
-	std::shared_ptr<GaussianMixtureModel> model(new GaussianMixtureModel);
-	model->setNumComponents(c);
-	model->initialize(class_data);
-	model->setNumIterations(max_iterations_);
-	model->setDelta(delta_);
-	
-	try {
-	  model->expectationMaximization(class_data);
-	}
-	catch (std::runtime_error e) {
-	  std::cout << "\t\t\t\t" <<  c << " components are not usable" << std::endl;
-	  break;
-	}
+            std::shared_ptr<GaussianMixtureModel> model(
+                    new GaussianMixtureModel);
+            model->setNumComponents(c);
+            model->initialize(class_data);
+            model->setNumIterations(max_iterations_);
+            model->setDelta(delta_);
 
-	double trial_bic = model->bayesianInformationCriterion(class_data);
-	std::cout << "\t\t\t\tTrial BIC: " << trial_bic << std::endl;
+            try {
+                model->expectationMaximization(class_data);
+            } catch (std::runtime_error e) {
+                std::cout << "\t\t\t\t" << c << " components are not usable"
+                          << std::endl;
+                break;
+            }
 
-	if (first_trial || trial_bic < bic) {
-	  bic = trial_bic;
-	  gmm_vec_[class_idx] = model;
+            double trial_bic = model->bayesianInformationCriterion(class_data);
+            std::cout << "\t\t\t\tTrial BIC: " << trial_bic << std::endl;
 
-	  if (first_trial) {
-	    first_trial = false;
-	  }
-	}
-      }
+            if (first_trial || trial_bic < bic) {
+                bic = trial_bic;
+                gmm_vec_[class_idx] = model;
 
-      std::cout << "\t\tFinal class model with " << gmm_vec_[class_idx]->numComponents() << "; ";
-      std::cout << "BIC " << bic << std::endl;
-      ++class_idx;
+                if (first_trial) {
+                    first_trial = false;
+                }
+            }
+        }
+
+        std::cout << "\t\tFinal class model with "
+                  << gmm_vec_[class_idx]->numComponents() << "; ";
+        std::cout << "BIC " << bic << std::endl;
+        ++class_idx;
     }
 
     trained_ = true;
-  }
+}
 
-  std::vector<int> GMMClassifier::predict(const Eigen::MatrixXd &dataset) const {
+std::vector<int> GMMClassifier::predict(const Eigen::MatrixXd& dataset) const {
     if (!trained_) {
-      throw std::runtime_error(nottrained_());
+        throw std::runtime_error(nottrained_());
     }
 
     if (dataset.cols() != input_size_) {
-      throw std::runtime_error(dimensionality_mismatch_());
+        throw std::runtime_error(dimensionality_mismatch_());
     }
 
     int dataset_size = dataset.rows();
@@ -121,37 +128,38 @@ namespace gmms {
 
 
     int num_threads = omp_get_max_threads();
-    int thread_dataset_size = floor(double(dataset_size)/double(num_threads));
-    
+    int thread_dataset_size = floor(double(dataset_size) / double(num_threads));
+
     int thread_log_likelihood[num_threads];
 
 #pragma omp parallel for
     for (int i = 0; i < dataset_size; ++i) {
-      bool first = true;
-      double log_likelihood = 0.0;
+        bool first = true;
+        double log_likelihood = 0.0;
 
-      for (int k = 0; k < gmm_vec_.size(); ++k) {
-	if (gmm_vec_[k] == nullptr) {
-	  continue;
-	}
+        for (int k = 0; k < gmm_vec_.size(); ++k) {
+            if (gmm_vec_[k] == nullptr) {
+                continue;
+            }
 
-	double class_log_likelihood = gmm_vec_[k]->logLikelihood(dataset.row(i));
+            double class_log_likelihood =
+                    gmm_vec_[k]->logLikelihood(dataset.row(i));
 
-	if (first || log_likelihood < class_log_likelihood) {
-	  assignments[i] = classes_[k];
-	  log_likelihood = class_log_likelihood;
+            if (first || log_likelihood < class_log_likelihood) {
+                assignments[i] = classes_[k];
+                log_likelihood = class_log_likelihood;
 
-	  if (first) {
-	    first = false;
-	  }
-	}
-      }
+                if (first) {
+                    first = false;
+                }
+            }
+        }
     }
 
     return assignments;
-  }
+}
 
-  void GMMClassifier::load(const std::string filename) {
+void GMMClassifier::load(const std::string filename) {
     MatrixIO mio;
     Eigen::MatrixXd model;
 
@@ -167,36 +175,39 @@ namespace gmms {
     int idx = 4;
 
     while (idx < model.rows() - 1) {
-      classes_.push_back(model(idx, 0));
-      int rows = model(idx + 1, 0);
-      gmm_vec_.push_back(std::shared_ptr<GaussianMixtureModel>(new GaussianMixtureModel));
-      gmm_vec_[gmm_vec_.size() - 1]->load(model.block(idx + 2, 0, rows, model.cols()));
+        classes_.push_back(model(idx, 0));
+        int rows = model(idx + 1, 0);
+        gmm_vec_.push_back(std::shared_ptr<GaussianMixtureModel>(
+                new GaussianMixtureModel));
+        gmm_vec_[gmm_vec_.size() - 1]->load(
+                model.block(idx + 2, 0, rows, model.cols()));
 
-      idx += rows + 2;
+        idx += rows + 2;
     }
-  }
+}
 
-  void GMMClassifier::save(const std::string filename) {
+void GMMClassifier::save(const std::string filename) {
     MatrixIO mio;
     int rows = 0;
     int cols = 0;
     std::vector<Eigen::MatrixXd> gmm_models;
 
     for (int k = 0; k < gmm_vec_.size(); ++k) {
-      if (gmm_vec_[k] == nullptr) {
-	continue;
-      }
+        if (gmm_vec_[k] == nullptr) {
+            continue;
+        }
 
-      gmm_models.push_back(gmm_vec_[k]->save());
-      rows += gmm_models[k].rows();
+        gmm_models.push_back(gmm_vec_[k]->save());
+        rows += gmm_models[k].rows();
 
-      if (cols == 0) {
-	cols = gmm_models[k].cols();
-      }
+        if (cols == 0) {
+            cols = gmm_models[k].cols();
+        }
     }
 
     // gmm model + classes + num rows per classes
-    Eigen::MatrixXd model = Eigen::MatrixXd::Zero(rows + 2*classes_.size() + 4, cols);
+    Eigen::MatrixXd model =
+            Eigen::MatrixXd::Zero(rows + 2 * classes_.size() + 4, cols);
 
     model(0, 0) = trained_;
     model(1, 0) = delta_;
@@ -206,17 +217,17 @@ namespace gmms {
     int idx = 4;
 
     for (int k = 0; k < gmm_vec_.size(); ++k) {
-      if (gmm_vec_[k] == nullptr) {
-	continue;
-      }
+        if (gmm_vec_[k] == nullptr) {
+            continue;
+        }
 
-      model(idx, 0) = classes_[k];
-      model(idx + 1, 0) = gmm_models[k].rows();
-      model.block(idx + 2, 0, gmm_models[k].rows(), gmm_models[k].cols()) = gmm_models[k];
-      idx += gmm_models[k].rows() + 2;
+        model(idx, 0) = classes_[k];
+        model(idx + 1, 0) = gmm_models[k].rows();
+        model.block(idx + 2, 0, gmm_models[k].rows(), gmm_models[k].cols()) =
+                gmm_models[k];
+        idx += gmm_models[k].rows() + 2;
     }
 
     mio.writeToFile(filename, model);
-  }
-} // namespace gmms
-
+}
+}  // namespace gmms

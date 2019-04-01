@@ -1,12 +1,11 @@
 #ifndef COMPAREPARTICLEWEIGHTS_H
-#define COMPAREPARTICLEWEIGHTS_H  
+#define COMPAREPARTICLEWEIGHTS_H
 
 #include "particle_filter/Particle.h"
 
-namespace particle_filter
-{
+namespace particle_filter {
 
-/** 
+/**
  * @class CompareParticleWeights
  *
  * @author Stephan Wirth
@@ -15,28 +14,24 @@ namespace particle_filter
  *        to the weight of the particles.
  *
  * With this class as compare function, std::sort() can be used on arrays of
- * pointers to Particle. After sorting the array with this function, the particle
- * with the smallest weight will be at the last position.
- * 
+ * pointers to Particle. After sorting the array with this function, the
+ * particle with the smallest weight will be at the last position.
+ *
  * @see Particle
  */
 template <class StateType>
 class CompareParticleWeights {
-
-  public:
-
+public:
     /**
-     * @return true if the weight of the particle p1 is higher than the weight of particle p2.
+     * @return true if the weight of the particle p1 is higher than the weight
+     * of particle p2.
      */
-    bool operator() (const particle_filter::Particle<StateType>* p1,
-                     const particle_filter::Particle<StateType>* p2) const
-    {
-      return p1->getWeight() > p2->getWeight();
+    bool operator()(const particle_filter::Particle<StateType>* p1,
+            const particle_filter::Particle<StateType>* p2) const {
+        return p1->getWeight() > p2->getWeight();
     }
 };
 
-} // end of namespace
+}  // namespace particle_filter
 
 #endif
-
-

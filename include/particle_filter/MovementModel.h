@@ -1,27 +1,26 @@
 #ifndef MOVEMENTSTRATEGY_H
 #define MOVEMENTSTRATEGY_H
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 #include <geometry_msgs/Vector3.h>
 
-namespace particle_filter
-{
+namespace particle_filter {
 
 /**
  * @class MovementModel
  *
  * @brief Templated interface for movement models for particle filters.
  *
- * The movement model in a particle filter defines how a particle's state changes
- * over time.
- * It is used in the drift and diffuse step of particle_filter::ParticleFilter (strategy pattern).
- * To define a movement model, create a sub-class of this class and
- * implement the drift() method. A particle filter with this movement model
- * applies the drift method for each particle in each filter step. Also you have
- * to implement the function diffuse() to define a jitter that is added to
- * a state after drift() (which may be empty of course). You can use the function
- * randomGauss() to obtain Gaussian-distributed random variables.
+ * The movement model in a particle filter defines how a particle's state
+ * changes over time. It is used in the drift and diffuse step of
+ * particle_filter::ParticleFilter (strategy pattern). To define a movement
+ * model, create a sub-class of this class and implement the drift() method. A
+ * particle filter with this movement model applies the drift method for each
+ * particle in each filter step. Also you have to implement the function
+ * diffuse() to define a jitter that is added to a state after drift() (which
+ * may be empty of course). You can use the function randomGauss() to obtain
+ * Gaussian-distributed random variables.
  *
  * @author Stephan Wirth
  *
@@ -31,9 +30,7 @@ namespace particle_filter
 
 template <class StateType>
 class MovementModel {
-
-  public:
-
+public:
     /**
      * The destructor is empty.
      */
@@ -48,7 +45,9 @@ class MovementModel {
      * @param state Reference to the state that has to be manipulated.
      * @param dt time that has passed since the last filter update in seconds.
      */
-    virtual void drift(StateType& state, geometry_msgs::Vector3 linear, geometry_msgs::Vector3 angular) const = 0;
+    virtual void drift(StateType& state,
+            geometry_msgs::Vector3 linear,
+            geometry_msgs::Vector3 angular) const = 0;
 
     /**
      * This method will be applied in a ParticleFilter after drift(). It can be
@@ -58,14 +57,11 @@ class MovementModel {
      */
     virtual void diffuse(StateType& state) const = 0;
 
-  private:
-
+private:
 };
 
 template <class StateType>
-MovementModel<StateType>::~MovementModel() {
-}
+MovementModel<StateType>::~MovementModel() {}
 
-} // end of namespace
+}  // namespace particle_filter
 #endif
-
