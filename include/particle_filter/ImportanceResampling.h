@@ -1,8 +1,9 @@
 #ifndef IMPORTANCERESAMPLING_H
 #define IMPORTANCERESAMPLING_H
 
-#include "particle_filter/Particle.h"
+#include <particle_filter/ResamplingStrategy.h>
 #include "particle_filter/CRandomNumberGenerator.h"
+#include "particle_filter/Particle.h"
 
 namespace particle_filter
 {
