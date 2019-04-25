@@ -8,6 +8,7 @@
 #ifndef _GAUSSIAN_MIXTURE_MODEL_H_
 #define _GAUSSIAN_MIXTURE_MODEL_H_
 
+#include <algorithm>
 #include <Eigen/Core>
 #include <geometry_msgs/Point.h>
 #include <std_msgs/ColorRGBA.h>
@@ -58,6 +59,8 @@ public:
     double logLikelihood(const Eigen::MatrixXd& dataset);
     double bayesianInformationCriterion(const Eigen::MatrixXd& dataset);
     void load(Eigen::MatrixXd model);
+    std::pair<Gaussian, double>
+    getClosestGaussian(const Eigen::VectorXd& mean) const;
     GaussianMixtureModel copy() const;
     Eigen::MatrixXd save();
 

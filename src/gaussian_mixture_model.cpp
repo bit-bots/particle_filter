@@ -312,4 +312,14 @@ visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
     return marker;
 }
 
+std::pair<Gaussian, double>
+GaussianMixtureModel::getClosestGaussian(const Eigen::VectorXd& mean) const {
+    Gaussian closest_gaussian = *std::min_element(gaussian_vec_.begin(),
+            gaussian_vec_.end(), [&mean](Gaussian a, Gaussian b) {
+                return a.calcDistance(mean) < b.calcDistance(mean);
+            });
+    return std::make_pair(
+            closest_gaussian, closest_gaussian.calcDistance(mean));
+}
+
 }  // namespace gmms

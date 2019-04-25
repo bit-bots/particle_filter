@@ -114,5 +114,13 @@ void Gaussian::addToEigenMatrix(Eigen::MatrixXd& matrix,
     }
 }
 
+double Gaussian::calcDistance(const Eigen::VectorXd& mean) const {
+    if (mean.size() != dimensionality_) {
+        throw std::runtime_error(dimensionality_mismatch());
+    }
+    Eigen::VectorXd diff_vec = mean_ - mean;
+    return diff_vec.cwiseAbs().sum() / static_cast<double>(dimensionality_);
+}
+
 
 }  // namespace gmms

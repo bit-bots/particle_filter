@@ -62,6 +62,8 @@ public:
             float y1,
             int stepcount) const;
 
+    double calcDistance(const Eigen::VectorXd& mean) const;
+
 private:
     int dimensionality_;
     Eigen::VectorXd mean_;
