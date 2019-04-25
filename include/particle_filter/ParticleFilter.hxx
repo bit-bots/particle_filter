@@ -244,10 +244,14 @@ unsigned int ParticleFilter<StateType>::getNumEffectiveParticles() const {
     return static_cast<int>(1.0f / squareSum);
 }
 
-
 template <class StateType>
 const Particle<StateType>* ParticleFilter<StateType>::getBestParticle() const {
     return m_CurrentList[0];
+}
+
+template <class StateType>
+double ParticleFilter<StateType>::getMaxParticleWeight() const {
+    return m_CurrentList[0]->getWeight();
 }
 
 template <class StateType>

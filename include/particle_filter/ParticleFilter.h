@@ -295,6 +295,13 @@ public:
      */
     double getWeight(unsigned int i) const;
 
+
+    /**
+     * Returns the weight of the highest rated particle.
+     * @return weight of the highest rated particle.
+     */
+    double getMaxParticleWeight() const;
+
     /**
      * Performs an entire filter procedure.
      * filter() also saves the last filter time to be able to compute the
