@@ -317,7 +317,7 @@ ParticleFilter<StateType>::renderMarkerArray(std::string n_space,
     visualization_msgs::MarkerArray marker_array;
 
     for (unsigned int i = 0; i < m_NumParticles; i++) {
-        marker_array.markers.push_back(m_CurrentList[i]->renderMarker(
+        marker_array.markers.push_back(m_CurrentList[i]->getState().renderMarker(
                 n_space, frame, lifetime, color));
     }
 
