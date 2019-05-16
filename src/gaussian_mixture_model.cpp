@@ -277,8 +277,8 @@ visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
     marker.type = visualization_msgs::Marker::POINTS;
     marker.action = visualization_msgs::Marker::ADD;
     marker.lifetime = lifetime;
-    marker.scale.x = 0.05;
-    marker.scale.y = 0.05;
+    marker.scale.x = x_stepsize;
+    marker.scale.y = y_stepsize;
     marker.scale.z = 0.05;
     marker.pose.orientation.w = 1;
     if (!use_color) {
