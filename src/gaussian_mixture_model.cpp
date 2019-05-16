@@ -254,7 +254,8 @@ visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
         std::string frame,
         ros::Duration lifetime,
         bool use_color,
-        bool use_height) const {
+        bool use_height,
+        float z_offset) const {
     assert(x0 < x1);
     assert(y0 < y1);
     Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(stepcount, stepcount);
@@ -298,6 +299,7 @@ visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
             } else {
                 point.z = 0;
             }
+            point.z += z_offset;
             marker.points.push_back(point);
             if (use_color) {
                 std_msgs::ColorRGBA color;

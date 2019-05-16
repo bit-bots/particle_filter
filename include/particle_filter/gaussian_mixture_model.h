@@ -141,7 +141,8 @@ public:
             std::string frame,
             ros::Duration lifetime,
             bool use_color = true,
-            bool use_height = true) const;
+            bool use_height = true,
+            float z_offset = 0.0) const;
 
 private:
     bool initialized_;
