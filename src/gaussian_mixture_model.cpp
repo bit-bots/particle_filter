@@ -269,7 +269,7 @@ visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
     float y_delta = std::abs(y1 - y0);
     float x, y;
     float x_stepsize = x_delta / stepcount;
-    float y_stepsize = x_delta / stepcount;
+    float y_stepsize = y_delta / stepcount;
     visualization_msgs::Marker marker;
     marker.header.frame_id = frame;
     marker.header.stamp = ros::Time::now();
