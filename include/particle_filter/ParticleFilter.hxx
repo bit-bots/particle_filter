@@ -354,7 +354,7 @@ ParticleFilter<StateType>::getDynGMM(int min_num_components,
     StateType::convertParticleListToEigen(
             m_CurrentList, dataset, ignore_explorers);
 
-    gmms::GaussianMixtureModel last_gmm;
+    gmms::GaussianMixtureModel last_gmm, last_last_gmm;
     int component_count = 0;
     int component_number = min_num_components;
     double old_log_likelihood;
@@ -363,7 +363,7 @@ ParticleFilter<StateType>::getDynGMM(int min_num_components,
         component_number = min_num_components + component_count;
         ROS_INFO_STREAM("" << component_number);
         old_log_likelihood = log_likelihood;
-
+        last_last_gmm = last_gmm;
         last_gmm = gmms::GaussianMixtureModel(
                 component_number, iteration_delta, num_iterations);
         last_gmm.initialize(dataset);
@@ -376,7 +376,11 @@ ParticleFilter<StateType>::getDynGMM(int min_num_components,
     } while (component_number < max_num_components and
              std::abs(old_log_likelihood - log_likelihood) > component_delta);
 
-    return last_gmm;
+    if (std::abs(old_log_likelihood - log_likelihood) > component_delta or component_count <= 1) {
+        return last_gmm;
+    } else {
+        return last_last_gmm;
+    }
 }
 
 
