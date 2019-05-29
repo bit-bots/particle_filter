@@ -36,6 +36,7 @@ namespace particle_filter {
 /**
  * @class ParticleFilter
  *
+ * @author Niklas Fiedler
  * @author Stephan Wirth
  *
  * @brief (Templated) class that defines a particle filter.
@@ -309,8 +310,6 @@ public:
      * resetTimer().
      * The functions resample(),
      * drift(), diffuse() and measure() are called.
-     * @param dt time interval to use for filtering. If negative, the time
-     * interval will be calculated (time since last call of filter())
      */
     void filter();
 
@@ -361,6 +360,9 @@ public:
      * This method drifts the particles (second step of a filter process) using
      * the movement model of the particle filter. dt defines the time interval
      * that has to be used in drifting (in seconds).
+     *
+     * @param linear Linear movement of the robot during the last filter step
+     * @param angular Angular movement of the robot during the last filter step
      */
     void drift(geometry_msgs::Vector3 linear, geometry_msgs::Vector3 angular);
 
@@ -378,29 +380,86 @@ public:
 
     /**
      * Returns an iterator to the particle list's beginning.
+     *
+     * @returns Iterator to the particle list's beginning
      */
     ConstParticleIterator particleListBegin();
 
     /**
      * Returns an iterator to the end of the particle list.
+     *
+     * @returns Iterator to the end of the particle list
      */
     ConstParticleIterator particleListEnd();
 
+    /**
+     * Passes the arguments on to the renderPointsMarker method of the StateType.
+     *
+     *
+     * @param n_space Namespace of the rendered marker
+     * @param frame Frame in which the rendered marker is published
+     * @param lifetime Lifetime of the rendered marker
+     * @param color Color of the rendered marker
+     * @return A Marker message containing a point representation of each particle
+     */
     visualization_msgs::Marker renderPointsMarker(std::string n_space,
             std::string frame,
             ros::Duration lifetime,
             std_msgs::ColorRGBA color);
 
+
+    /**
+     * Passes the arguments on to the renderMarker method of the StateType and
+     * collects all of them in a MarkerArray message.
+     *
+     *
+     * @param n_space Namespace of the rendered markers
+     * @param frame Frame in which the rendered markers are published
+     * @param lifetime Lifetime of the rendered markers
+     * @param color Color of the rendered markers
+     * @return A MarkerArray message containing representations of each
+     * particle. The specific Marker type depends on the StateType
+     */
     visualization_msgs::MarkerArray renderMarkerArray(std::string n_space,
             std::string frame,
             ros::Duration lifetime,
             std_msgs::ColorRGBA color);
 
+    /**
+     * Computes a GMM representation of the current state.
+     * The GMM will have a predefined number of components.
+     *
+     * @param num_components number of components of the GMM
+     * @param delta minimal improvement of the log-likelihood in an iteration
+     * of the EM-Algorithm to continue
+     * @param num_iterations maximal number of iterations of the EM-Algorithm
+     * computing the GMM
+     * @param ignore_explorers ignore explorer particles (you should always do
+     * this!)
+     * @return
+     */
     gmms::GaussianMixtureModel getGMM(int num_components,
             const double delta = 0.01,
             const int num_iterations = 100,
             const bool ignore_explorers = true);
 
+    /**
+     * Computes a GMM representation of the current state.
+     * The GMM will have a number of components between min_num_components and
+     * max_num_components.
+     *
+     * @param min_num_components minimal number of components of the GMM
+     * @param max_num_components maximal number of components of the GMM
+     * @param component_delta minimal improvement of the log-likelihood between
+     * two GMMS to decide to go on with the one with more components
+     * @param iteration_delta minimal improvement of the log-likelihood in an
+     * iteration of the EM-Algorithm to continue
+     * @param num_iterations maximal number of iterations of the EM-Algorithm
+     * computing the GMM
+     * @param ignore_explorers ignore explorer particles (you should always do
+     * this!)
+     * @return
+     */
     gmms::GaussianMixtureModel getDynGMM(int min_num_components,
             int max_num_components,
             const double component_delta,

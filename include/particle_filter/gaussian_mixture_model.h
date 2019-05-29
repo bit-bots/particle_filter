@@ -22,6 +22,16 @@
 #include <particle_filter/matrix_io.h>
 
 namespace gmms {
+    /**
+     * @class GaussianMixtureModel
+     *
+     * @brief Class representing a Gaussian Mixture Model (GMM) including
+     * EM-fitting
+     *
+     * @author Niklas Fiedler
+     * @author Roberto Capobianco
+     *
+     */
 class GaussianMixtureModel {
 public:
     GaussianMixtureModel() {
@@ -30,7 +40,7 @@ public:
         num_iterations_ = 100;
         initialized_ = false;
     }
-    GaussianMixtureModel(const int num_components,
+    explicit GaussianMixtureModel(const int num_components,
             const double delta = 0.01,
             const int num_iterations = 100) {
         num_components_ = num_components;

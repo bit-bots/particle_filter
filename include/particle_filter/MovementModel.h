@@ -43,7 +43,8 @@ public:
      * since the last filter update.
      * Define this function in your sub-class!
      * @param state Reference to the state that has to be manipulated.
-     * @param dt time that has passed since the last filter update in seconds.
+     * @param linear Linear movement of the robot during the last filter step
+     * @param angular Angular movement of the robot during the last filter step
      */
     virtual void drift(StateType& state,
             geometry_msgs::Vector3 linear,
@@ -53,7 +54,6 @@ public:
      * This method will be applied in a ParticleFilter after drift(). It can be
      * used to add a small jitter to the state.
      * @param state Reference to the state that has to be manipulated.
-     * @param dt time that has passed since the last filter update in seconds.
      */
     virtual void diffuse(StateType& state) const = 0;
 

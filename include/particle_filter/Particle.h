@@ -14,8 +14,9 @@ namespace particle_filter {
  * distribution. Normally the user of the class ParticleFilter has
  * not to care about this class, as it is used only internally by
  * ParticleFilter.
+ * @author Niklas Fiedler
  * @author Stephan Wirth
- * @see ParticleFilter
+ * @see particle_filter
  */
 template <class StateType>
 class Particle {
