@@ -31,7 +31,7 @@ public:
     /**
      * The constructor of this base class inits some members.
      */
-    ImportanceResampling<StateType>();
+    ImportanceResampling<StateType>(bool reset_weights = false, double particle_reset_weight = 0);
 
     /**
      * The destructor is empty.
@@ -56,11 +56,15 @@ public:
 protected:
     // The default random number generator
     CRandomNumberGenerator m_RNG;
+
+private:
+    bool reset_weights_;
+    double particle_reset_weight_;
 };
 
 
 template <class StateType>
-ImportanceResampling<StateType>::ImportanceResampling() {}
+ImportanceResampling<StateType>::ImportanceResampling(bool reset_weights, double particle_reset_weight) : reset_weights_(reset_weights), particle_reset_weight_(particle_reset_weight)  {}
 
 template <class StateType>
 ImportanceResampling<StateType>::~ImportanceResampling() {}
@@ -92,6 +96,9 @@ void ImportanceResampling<StateType>::resample(const ParticleList& sourceList,
         *(destinationList[destIndex]) =
                 *(sourceList[sourceIndex]);  // copy particle (via assignment
                                              // operator)
+        if (reset_weights_) {
+            destinationList[destIndex]->setWeight(particle_reset_weight_);
+        }
     }
 }
 }  // namespace particle_filter
