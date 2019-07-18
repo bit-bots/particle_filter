@@ -219,13 +219,21 @@ void ParticleFilter<StateType>::measure() {
     for (unsigned int i = 0; i < m_NumParticles; i++) {
         // apply observation model
 
+        // accumulate the weight when it is defined in the observation model
+        if (m_ObservationModel->accumulate_weights_) {
+            weight = m_CurrentList[i]->getWeight();
+        } else {
+            weight = 0;
+        }
+
+
         // set explorer particle weight to minimal value if there are no
         // measurements available to reduce noise
         if (m_CurrentList[i]->is_explorer_ &&
                 !m_ObservationModel->measurements_available()) {
-            weight = m_ObservationModel->get_min_weight();
+            weight += m_ObservationModel->get_min_weight();
         } else {
-            weight = m_ObservationModel->measure(m_CurrentList[i]->getState());
+            weight += m_ObservationModel->measure(m_CurrentList[i]->getState());
         }
         m_CurrentList[i]->setWeight(weight);
     }

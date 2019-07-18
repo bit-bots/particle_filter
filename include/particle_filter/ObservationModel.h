@@ -48,6 +48,8 @@ public:
     // virtual void clear_measurement();
     virtual double get_min_weight() const = 0;
 
+    bool accumulate_weights_ = false;
+
 private:
 };
 
