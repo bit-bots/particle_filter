@@ -467,6 +467,8 @@ public:
             const int num_iterations = 100,
             const bool ignore_explorers = true);
 
+    std::vector<std::vector<double>> getCovarianceMatrix(const bool ignore_explorers=true);
+
 protected:
     /**
      * This method sorts the particles according to their weight. STL's

@@ -391,5 +391,25 @@ ParticleFilter<StateType>::getDynGMM(int min_num_components,
     }
 }
 
+template <class StateType>
+std::vector<std::vector<double>> ParticleFilter<StateType>::getCovarianceMatrix(const bool ignore_explorers) {
+    // get an Eigen matrix of the particles
+    Eigen::MatrixXd dataset;
+    StateType::convertParticleListToEigen(
+            m_CurrentList, dataset, ignore_explorers);
+    Eigen::VectorXd component_means = dataset.colwise().mean();
+    Eigen::VectorXd component_sums = dataset.colwise().sum();
+    int component_num = dataset.cols();
+    int particle_num = dataset.rows();
+    Eigen::VectorXd variances = ((particle_num * component_means) - component_sums).cwiseAbs();
+    std::vector<std::vector<double>> cov_mat(component_num, std::vector<double>(component_num, 0));
+    for (int x = 0; x < component_num; x++) {
+        for (int y = 0; y < component_num; y++) {
+            cov_mat[x][y] = variances.coeff(x) * variances.coeff(y) / particle_num;
+        }
+    }
+    return cov_mat;
+}
+
 
 }  // namespace particle_filter
