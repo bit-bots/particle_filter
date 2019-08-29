@@ -287,7 +287,7 @@ ParticleFilter<StateType>::getBestXPercentEstimate(float percentage) const {
     unsigned int numToConsider = m_NumParticles / 100.0f * percentage;
     for (unsigned int i = 1; i < numToConsider; i++) {
         estimate +=
-                m_CurrentList[i]->getState() * m_CurrentList[i]->getWeight(); // hier nicht theta sondern cos und sin davon aufsummieren
+                m_CurrentList[i]->getState() * m_CurrentList[i]->getWeight();
         weightSum += m_CurrentList[i]->getWeight();
     }
     estimate = estimate * (1.0 / weightSum);
@@ -420,16 +420,19 @@ std::vector<std::vector<double>> ParticleFilter<StateType>::getCovarianceMatrix(
 
         float xMean = mean.getXPos();
         float yMean = mean.getYPos();
-        float thetaMean = mean.getTheta();
+        //float thetaMean = mean.getTheta();
 
-        float xI; // = m_CurrentList[0]->getState().getXPos();
-        float yI;// = m_CurrentList[0]->getState().getYPos();
-        float thetaI;// = m_CurrentList[0]->getState().getTheta();
+        float xI;
+        float yI;
+        float thetaSinI;
+        float thetaCosI;
 
         for (unsigned int i = 0; i < m_NumParticles; i++){
             xI += m_CurrentList[i]->getState().getXPos();
             yI += m_CurrentList[i]->getState().getYPos();
-            thetaI += m_CurrentList[i]->getState().getTheta();
+            thetaSinI += m_CurrentList[i]->getState().getSinTheta();
+            thetaCosI += m_CurrentList[i]->getState().getCosTheta();
+
         }
 
         // linear components
@@ -448,20 +451,17 @@ std::vector<std::vector<double>> ParticleFilter<StateType>::getCovarianceMatrix(
         //float pos36 = (thetaIMean * thetaIMean) / m_NumParticles;
 
         //angular component
-        float c = std::cos(thetaIMean);
-        float s = std::sin(thetaIMean);
-        float pos36 = -2 * log(sqrt(c * c + s * s));
+        float c = thetaSinI / m_NumParticles;
+        float s = thetaCosI /m_NumParticles;
+        float pos36 = sqrt(-2 * log(sqrt(c * c + s * s)));
 
         std::vector<double> covariance = {pos0, pos1, 0, 0, 0, 0,
-                                          pos1, pos7, 0, 0, 0, 0, //pos1 == pos6
+                                          pos1, pos7, 0, 0, 0, 0, //pos6 == pos1
                                           0, 0, 0, 0, 0, 0,
                                           0, 0, 0, 0, 0, 0,
                                           0, 0, 0, 0, 0, 0,
                                           0, 0, 0, 0, 0, pos36};
 
-        // xx, xy, xt,
-        // yx, yy, yt,
-        // tx, ty, tt,
         return covariance;
     }
 
