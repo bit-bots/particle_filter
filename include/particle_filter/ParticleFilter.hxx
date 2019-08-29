@@ -287,7 +287,7 @@ ParticleFilter<StateType>::getBestXPercentEstimate(float percentage) const {
     unsigned int numToConsider = m_NumParticles / 100.0f * percentage;
     for (unsigned int i = 1; i < numToConsider; i++) {
         estimate +=
-                m_CurrentList[i]->getState() * m_CurrentList[i]->getWeight();
+                m_CurrentList[i]->getState() * m_CurrentList[i]->getWeight(); // hier nicht theta sondern cos und sin davon aufsummieren
         weightSum += m_CurrentList[i]->getWeight();
     }
     estimate = estimate * (1.0 / weightSum);
@@ -412,6 +412,58 @@ std::vector<std::vector<double>> ParticleFilter<StateType>::getCovarianceMatrix(
     }
     return cov_mat;
 }
+
+    template <class StateType>
+    std::vector<double> ParticleFilter<StateType>::getCovariance(float percentage) const{
+
+        StateType mean = getBestXPercentEstimate(percentage);
+
+        float xMean = mean.getXPos();
+        float yMean = mean.getYPos();
+        float thetaMean = mean.getTheta();
+
+        float xI; // = m_CurrentList[0]->getState().getXPos();
+        float yI;// = m_CurrentList[0]->getState().getYPos();
+        float thetaI;// = m_CurrentList[0]->getState().getTheta();
+
+        for (unsigned int i = 0; i < m_NumParticles; i++){
+            xI += m_CurrentList[i]->getState().getXPos();
+            yI += m_CurrentList[i]->getState().getYPos();
+            thetaI += m_CurrentList[i]->getState().getTheta();
+        }
+
+        // linear components
+        float xIMean = xI - (m_NumParticles * xMean);
+        float yIMean = yI - ( m_NumParticles * yMean);
+       // float thetaIMean = thetaI - (m_NumParticles * thetaMean);
+
+        float pos0 = (xIMean * xIMean) / m_NumParticles;
+        float pos1 = (xIMean * yIMean) / m_NumParticles;
+        //float pos5 = (xIMean * thetaIMean) / m_NumParticles;
+        //float pos6 = (yIMean * xIMean) / m_NumParticles; == pos1
+        float pos7 = (yIMean * yIMean) / m_NumParticles;
+        //float pos11 = (yIMean * thetaIMean) / m_NumParticles;
+        //float pos30 = (thetaIMean * xIMean) / m_NumParticles; == pos2
+        //float pos31 = (thetaIMean * yIMean) / m_NumParticles; ==pos11
+        //float pos36 = (thetaIMean * thetaIMean) / m_NumParticles;
+
+        //angular component
+        float c = std::cos(thetaIMean);
+        float s = std::sin(thetaIMean);
+        float pos36 = -2 * log(sqrt(c * c + s * s));
+
+        std::vector<double> covariance = {pos0, pos1, 0, 0, 0, 0,
+                                          pos1, pos7, 0, 0, 0, 0, //pos1 == pos6
+                                          0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, pos36};
+
+        // xx, xy, xt,
+        // yx, yy, yt,
+        // tx, ty, tt,
+        return covariance;
+    }
 
 
 }  // namespace particle_filter
