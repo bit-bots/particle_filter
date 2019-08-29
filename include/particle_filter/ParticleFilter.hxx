@@ -325,6 +325,8 @@ ParticleFilter<StateType>::renderMarkerArray(std::string n_space,
     visualization_msgs::MarkerArray marker_array;
 
     for (unsigned int i = 0; i < m_NumParticles; i++) {
+        double weight = m_CurrentList[i]->getWeight();
+        color.r = weight / getMaxParticleWeight();
         marker_array.markers.push_back(m_CurrentList[i]->getState().renderMarker(
                 n_space, frame, lifetime, color));
     }
