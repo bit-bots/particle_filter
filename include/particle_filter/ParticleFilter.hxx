@@ -425,51 +425,91 @@ std::vector<std::vector<double>> ParticleFilter<StateType>::getCovarianceMatrix(
         //std::cout << "number particles : " << m_NumParticles;
         //std::cout << "percentage: " << percentage;
         //std::cout << "nums to consider: " << numToConsider;
-
-        for (unsigned int i = 0; i < numToConsider; i++){
-            xI += m_CurrentList[i]->getState().getXPos();
-            yI += m_CurrentList[i]->getState().getYPos();
-            thetaSinI += m_CurrentList[i]->getState().getSinTheta();
-            thetaCosI += m_CurrentList[i]->getState().getCosTheta();
-
+        unsigned int i = 0;
+        for (i; i < numToConsider; i++){
+            xI += std::round(m_CurrentList[i]->getState().getXPos() * 10000.0) / 10000.0;
+            yI += std::round(m_CurrentList[i]->getState().getYPos() * 10000.0) / 10000.0;
+            thetaSinI += std::round(m_CurrentList[i]->getState().getSinTheta() * 10000.0) / 10000.0;
+            thetaCosI += std::round(m_CurrentList[i]->getState().getCosTheta() * 10000.0) / 10000.0;
         }
 
         // linear components
         StateType mean = getBestXPercentEstimate(percentage);
 
-        double xMean = mean.getXPos();
-        double yMean = mean.getYPos();
+        double xMean = std::round(mean.getXPos() * 10000.0) / 10000.0;
+        double yMean = std::round(mean.getYPos() * 10000.0) / 10000.0;
 
         double xIMean = xI - (numToConsider * xMean);
         double yIMean = yI - (numToConsider * yMean);
 
+        xIMean = std::round(xIMean * 10000.0) / 10000.0;
+        yIMean = std::round(yIMean * 10000.0) / 10000.0;
         double pos0 = (xIMean * xIMean) / numToConsider;
         double pos1 = (xIMean * yIMean) / numToConsider;
         double pos7 = (yIMean * yIMean) / numToConsider;
 
         //angular component
-        double s = thetaSinI;
-        double c = thetaCosI;
+        //double s = thetaSinI;
+        //double c = thetaCosI;
 
-        double R = sqrt(c * c + s * s);
+        thetaCosI = std::round(thetaCosI * 10000.0) / 10000.0;
+        thetaSinI = std::round(thetaSinI * 10000.0) / 10000.0;
+
+        double R = std::hypot(thetaCosI,thetaSinI);//sqrt(c * c + s * s);
+        R = std::round(R * 10000.0) / 10000.0;
+
         double Rmean = R / numToConsider;
+        Rmean = std::round(Rmean * 10000.0) / 10000.0;
+
+
         //float pos36 = sqrt(-2 * log(sqrt(c * c + s * s))); // covariance not working and wrong
-        double pos36 = 1 - Rmean; // variance
+        //double pos36 = sqrt(-2 * log(Rmean));
+
+        double pos35 = 1 - Rmean; // variance
+
+
+        pos0 = std::round(pos0 * 10000.0) / 10000.0;
+        pos1 = std::round(pos1 * 10000.0) / 10000.0;
+        pos7 = std::round(pos7 * 10000.0) / 10000.0;
+        pos35 = std::round(pos35 * 10000.0) / 10000.0;
+
+        /**
 
         if (pos36 < 0){
-            std::cout << "theta sin I: " << thetaSinI << " ";
-            std::cout << "theta cos I: " << thetaCosI << " ";
-            std::cout << "numToConsider: " << numToConsider << " ";
+            std::cout << "nums to consider: " << numToConsider << std::endl;
+
+            std::cout << "i: " << i << std::endl;
+            std::cout << "theta sin I: " << thetaSinI << std::endl;
+            std::cout << "theta cos I: " << thetaCosI << std::endl;
+            std::cout << "pos36: " << pos36 << std::endl;
 
 
         }
+         **/
+
+        if (pos0 == -0.0) {
+            pos0 = 0.0;
+        }
+        if (pos1 == -0.0) {
+            pos1 = 0.0;
+        }
+        if (pos7 == -0.0) {
+            pos7 = 0.0;
+        }
+        if (pos35 < 0.0){
+            pos35 = 0.0;
+        }
+        else if (pos35 > 1){
+            pos35 = 1.0;
+        }
+
 
         std::vector<double> covariance = {pos0, pos1, 0, 0, 0, 0,
                                           pos1, pos7, 0, 0, 0, 0, //pos6 == pos1
                                           0, 0, 0, 0, 0, 0,
                                           0, 0, 0, 0, 0, 0,
                                           0, 0, 0, 0, 0, 0,
-                                          0, 0, 0, 0, 0, pos36};
+                                          0, 0, 0, 0, 0, pos35};
 
         return covariance;
     }
