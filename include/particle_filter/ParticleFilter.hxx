@@ -325,6 +325,8 @@ ParticleFilter<StateType>::renderMarkerArray(std::string n_space,
     visualization_msgs::MarkerArray marker_array;
 
     for (unsigned int i = 0; i < m_NumParticles; i++) {
+        double weight = m_CurrentList[i]->getWeight();
+        color.r = weight / getMaxParticleWeight();
         marker_array.markers.push_back(m_CurrentList[i]->getState().renderMarker(
                 n_space, frame, lifetime, color));
     }
@@ -390,6 +392,127 @@ ParticleFilter<StateType>::getDynGMM(int min_num_components,
         return last_last_gmm;
     }
 }
+
+template <class StateType>
+std::vector<std::vector<double>> ParticleFilter<StateType>::getCovarianceMatrix(const bool ignore_explorers) {
+    // get an Eigen matrix of the particles
+    Eigen::MatrixXd dataset;
+    StateType::convertParticleListToEigen(
+            m_CurrentList, dataset, ignore_explorers);
+    Eigen::VectorXd component_means = dataset.colwise().mean();
+    Eigen::VectorXd component_sums = dataset.colwise().sum();
+    int component_num = dataset.cols();
+    int particle_num = dataset.rows();
+    Eigen::VectorXd variances = ((particle_num * component_means) - component_sums).cwiseAbs();
+    std::vector<std::vector<double>> cov_mat(component_num, std::vector<double>(component_num, 0));
+    for (int x = 0; x < component_num; x++) {
+        for (int y = 0; y < component_num; y++) {
+            cov_mat[x][y] = variances.coeff(x) * variances.coeff(y) / particle_num;
+        }
+    }
+    return cov_mat;
+}
+
+    template <class StateType>
+    std::vector<double> ParticleFilter<StateType>::getCovariance(float percentage) const{
+
+        double xI;
+        double yI;
+        double thetaSinI;
+        double thetaCosI;
+
+        unsigned int numToConsider = m_NumParticles * (percentage / 100.0f);
+        //std::cout << "number particles : " << m_NumParticles;
+        //std::cout << "percentage: " << percentage;
+        //std::cout << "nums to consider: " << numToConsider;
+        unsigned int i = 0;
+        for (i; i < numToConsider; i++){
+            xI += std::round(m_CurrentList[i]->getState().getXPos() * 10000.0) / 10000.0;
+            yI += std::round(m_CurrentList[i]->getState().getYPos() * 10000.0) / 10000.0;
+            thetaSinI += std::round(m_CurrentList[i]->getState().getSinTheta() * 10000.0) / 10000.0;
+            thetaCosI += std::round(m_CurrentList[i]->getState().getCosTheta() * 10000.0) / 10000.0;
+        }
+
+        // linear components
+        StateType mean = getBestXPercentEstimate(percentage);
+
+        double xMean = std::round(mean.getXPos() * 10000.0) / 10000.0;
+        double yMean = std::round(mean.getYPos() * 10000.0) / 10000.0;
+
+        double xIMean = xI - (numToConsider * xMean);
+        double yIMean = yI - (numToConsider * yMean);
+
+        xIMean = std::round(xIMean * 10000.0) / 10000.0;
+        yIMean = std::round(yIMean * 10000.0) / 10000.0;
+        double pos0 = (xIMean * xIMean) / numToConsider;
+        double pos1 = (xIMean * yIMean) / numToConsider;
+        double pos7 = (yIMean * yIMean) / numToConsider;
+
+        //angular component
+        //double s = thetaSinI;
+        //double c = thetaCosI;
+
+        thetaCosI = std::round(thetaCosI * 10000.0) / 10000.0;
+        thetaSinI = std::round(thetaSinI * 10000.0) / 10000.0;
+
+        double R = std::hypot(thetaCosI,thetaSinI);//sqrt(c * c + s * s);
+        R = std::round(R * 10000.0) / 10000.0;
+
+        double Rmean = R / numToConsider;
+        Rmean = std::round(Rmean * 10000.0) / 10000.0;
+
+
+        //float pos36 = sqrt(-2 * log(sqrt(c * c + s * s))); // covariance not working and wrong
+        //double pos36 = sqrt(-2 * log(Rmean));
+
+        double pos35 = 1 - Rmean; // variance
+
+
+        pos0 = std::round(pos0 * 10000.0) / 10000.0;
+        pos1 = std::round(pos1 * 10000.0) / 10000.0;
+        pos7 = std::round(pos7 * 10000.0) / 10000.0;
+        pos35 = std::round(pos35 * 10000.0) / 10000.0;
+
+        /**
+
+        if (pos36 < 0){
+            std::cout << "nums to consider: " << numToConsider << std::endl;
+
+            std::cout << "i: " << i << std::endl;
+            std::cout << "theta sin I: " << thetaSinI << std::endl;
+            std::cout << "theta cos I: " << thetaCosI << std::endl;
+            std::cout << "pos36: " << pos36 << std::endl;
+
+
+        }
+         **/
+
+        if (pos0 == -0.0) {
+            pos0 = 0.0;
+        }
+        if (pos1 == -0.0) {
+            pos1 = 0.0;
+        }
+        if (pos7 == -0.0) {
+            pos7 = 0.0;
+        }
+        if (pos35 < 0.0){
+            pos35 = 0.0;
+        }
+        else if (pos35 > 1){
+            pos35 = 1.0;
+        }
+
+
+        std::vector<double> covariance = {pos0, pos1, 0, 0, 0, 0,
+                                          pos1, pos7, 0, 0, 0, 0, //pos6 == pos1
+                                          0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, 0,
+                                          0, 0, 0, 0, 0, pos35};
+
+        return covariance;
+    }
 
 
 }  // namespace particle_filter
