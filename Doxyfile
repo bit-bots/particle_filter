@@ -45,5 +45,5 @@ WARN_FORMAT            = "$file:$line: $text"
 INPUT                  = include/particle_filter src
 INPUT_ENCODING         = UTF-8
 RECURSIVE              = YES
-DISABLE_INDEX = NO
-GENERATE_TREEVIEW = NO
+DISABLE_INDEX          = NO
+GENERATE_TREEVIEW      = NO
