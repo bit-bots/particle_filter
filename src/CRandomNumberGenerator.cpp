@@ -27,6 +27,7 @@ CRandomNumberGenerator::~CRandomNumberGenerator() {}
 
 void CRandomNumberGenerator::init() {
     srand(time(0));
+    m_GaussianBufferFilled = false;
 }
 
 double CRandomNumberGenerator::getGaussian(double standardDeviation) const {
