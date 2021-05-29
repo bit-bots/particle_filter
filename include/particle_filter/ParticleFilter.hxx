@@ -416,10 +416,10 @@ std::vector<std::vector<double>> ParticleFilter<StateType>::getCovarianceMatrix(
     template <class StateType>
     std::vector<double> ParticleFilter<StateType>::getCovariance(float percentage) const{
 
-        double xI;
-        double yI;
-        double thetaSinI;
-        double thetaCosI;
+        double xI = 0;
+        double yI = 0;
+        double thetaSinI = 0;
+        double thetaCosI = 0;
 
         unsigned int numToConsider = m_NumParticles * (percentage / 100.0f);
         //std::cout << "number particles : " << m_NumParticles;
