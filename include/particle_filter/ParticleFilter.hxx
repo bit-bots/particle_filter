@@ -183,6 +183,7 @@ void ParticleFilter<StateType>::normalize() {
 
 template <class StateType>
 void ParticleFilter<StateType>::resample() {
+    normalize();
     // swap lists
     m_CurrentList.swap(m_LastList);
     // call resampling strategy
@@ -239,7 +240,6 @@ void ParticleFilter<StateType>::measure() {
     }
     // after measurement we have to re-sort and normalize the particles
     sort();
-    normalize();
 }
 
 template <class StateType>
