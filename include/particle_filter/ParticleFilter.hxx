@@ -188,6 +188,11 @@ void ParticleFilter<StateType>::resample() {
     m_CurrentList.swap(m_LastList);
     // call resampling strategy
     m_ResamplingStrategy->resample(m_LastList, m_CurrentList);
+
+    for (ConstParticleIterator iter = m_CurrentList.begin(); iter != m_CurrentList.end();
+                ++iter) {
+        (*iter)->setWeight(.1);
+    }
 }
 
 
