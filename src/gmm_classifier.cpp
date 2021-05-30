@@ -52,7 +52,7 @@ void GMMClassifier::train(const Eigen::MatrixXd& dataset,
 
         int class_data_idx = 0;
 
-        for (int data_idx = 0; data_idx < labels.size(); ++data_idx) {
+        for (long data_idx = 0; data_idx < labels.size(); ++data_idx) {
             if (labels(data_idx) == *it) {
                 class_data.row(class_data_idx++) = training_data.row(data_idx);
             }
@@ -72,7 +72,6 @@ void GMMClassifier::train(const Eigen::MatrixXd& dataset,
             num_components = gmm_components;
         }
 
-#pragma parallel for
         for (int c = num_components; c <= gmm_components; ++c) {
             std::cout << "\t\t\t\tUsing " << c << " GMM components"
                       << std::endl;
@@ -86,7 +85,7 @@ void GMMClassifier::train(const Eigen::MatrixXd& dataset,
 
             try {
                 model->expectationMaximization(class_data);
-            } catch (std::runtime_error e) {
+            } catch (std::runtime_error &e) {
                 std::cout << "\t\t\t\t" << c << " components are not usable"
                           << std::endl;
                 break;
@@ -137,7 +136,7 @@ std::vector<int> GMMClassifier::predict(const Eigen::MatrixXd& dataset) const {
         bool first = true;
         double log_likelihood = 0.0;
 
-        for (int k = 0; k < gmm_vec_.size(); ++k) {
+        for (size_t k = 0; k < gmm_vec_.size(); ++k) {
             if (gmm_vec_[k] == nullptr) {
                 continue;
             }
@@ -192,7 +191,7 @@ void GMMClassifier::save(const std::string filename) {
     int cols = 0;
     std::vector<Eigen::MatrixXd> gmm_models;
 
-    for (int k = 0; k < gmm_vec_.size(); ++k) {
+    for (size_t k = 0; k < gmm_vec_.size(); ++k) {
         if (gmm_vec_[k] == nullptr) {
             continue;
         }
@@ -216,7 +215,7 @@ void GMMClassifier::save(const std::string filename) {
 
     int idx = 4;
 
-    for (int k = 0; k < gmm_vec_.size(); ++k) {
+    for (size_t k = 0; k < gmm_vec_.size(); ++k) {
         if (gmm_vec_[k] == nullptr) {
             continue;
         }

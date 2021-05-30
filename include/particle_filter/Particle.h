@@ -74,9 +74,9 @@ private:
 
 template <class StateType>
 Particle<StateType>::Particle(const StateType& state, double weight) :
+        is_explorer_(false),
         m_State(state),
-        m_Weight(weight),
-        is_explorer_(false) {}
+        m_Weight(weight) {}
 
 template <class StateType>
 Particle<StateType>::~Particle<StateType>() {}

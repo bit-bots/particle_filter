@@ -36,7 +36,6 @@ void GMMRegressor::train(const Eigen::MatrixXd& dataset,
         num_components = gmm_components;
     }
 
-#pragma parallel for
     for (int c = num_components; c <= gmm_components; ++c) {
         std::cout << "\t\t\t\tUsing " << c << " GMM components" << std::endl;
 
@@ -48,7 +47,7 @@ void GMMRegressor::train(const Eigen::MatrixXd& dataset,
 
         try {
             model->expectationMaximization(dataset);
-        } catch (std::runtime_error e) {
+        } catch (std::runtime_error &e) {
             std::cout << "\t\t\t\t" << c << " components are not usable"
                       << std::endl;
             break;
