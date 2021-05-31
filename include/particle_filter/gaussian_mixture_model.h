@@ -128,14 +128,14 @@ public:
     }
     inline const std::vector<Eigen::VectorXd> gaussianMeans() const {
         std::vector<Eigen::VectorXd> means(gaussian_vec_.size());
-        for (int g = 0; g < gaussian_vec_.size(); ++g) {
+        for (size_t g = 0; g < gaussian_vec_.size(); ++g) {
             means.at(g) = gaussian_vec_.at(g).mean();
         }
         return means;
     }
     inline const std::vector<Eigen::MatrixXd> gaussianCovariances() const {
         std::vector<Eigen::MatrixXd> covs(gaussian_vec_.size());
-        for (int g = 0; g < gaussian_vec_.size(); ++g) {
+        for (size_t g = 0; g < gaussian_vec_.size(); ++g) {
             covs.at(g) = gaussian_vec_.at(g).covariance();
         }
         return covs;

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(particle_filter)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+add_compile_options(-Wall -Werror -Wno-unused)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -31,6 +32,7 @@ endif(MSVC90 OR MSVC10)
 
 else(OPENMP_FOUND)
 message (STATUS "OpenMP not found")
+add_compile_options(-Wno-unknown-pragmas)
 endif()
 
 if (MSVC)
