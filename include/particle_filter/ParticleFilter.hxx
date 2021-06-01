@@ -154,36 +154,9 @@ void ParticleFilter<StateType>::sort() {
             CompareParticleWeights<StateType>());
 }
 
-template <class StateType>
-void ParticleFilter<StateType>::normalize() {
-    double weightSum = 0.0;
-    ConstParticleIterator iter;
-    for (iter = m_CurrentList.begin(); iter != m_CurrentList.end(); ++iter) {
-        weightSum += (*iter)->getWeight();
-    }
-    // only normalize if weightSum is big enough to devide
-    if (weightSum > m_NumParticles * std::numeric_limits<double>::epsilon()) {
-        double factor = 1.0 / weightSum;
-        for (iter = m_CurrentList.begin(); iter != m_CurrentList.end();
-                ++iter) {
-            double newWeight = (*iter)->getWeight() * factor;
-            (*iter)->setWeight(newWeight);
-        }
-    } else {
-        // std::cerr << "WARNING: ParticleFilter::normalize(): Particle weights
-        // *very* small!" << std::endl;
-        ROS_WARN_STREAM(
-                "The particle weights got extremely small. \nResetting them all to .8");
-        for (iter = m_CurrentList.begin(); iter != m_CurrentList.end();
-                ++iter) {
-            (*iter)->setWeight(.8);
-        }
-    }
-}
 
 template <class StateType>
 void ParticleFilter<StateType>::resample() {
-    normalize();
     // swap lists
     m_CurrentList.swap(m_LastList);
     // call resampling strategy
@@ -220,18 +193,17 @@ void ParticleFilter<StateType>::measure() {
         //    currently, this results in a problem, as the particle weight does
         //    not decay
     }
-    double weight;
+    double weight, weights_sum = 0;
 #pragma parallel for
-    for (unsigned int i = 0; i < m_NumParticles; i++) {
+    for (size_t i = 0; i < m_NumParticles; i++) {
         // apply observation model
 
         // accumulate the weight when it is defined in the observation model
         if (m_ObservationModel->accumulate_weights_) {
-            weight = m_CurrentList[i]->getWeight();
+            weight = m_CurrentList[i]->getWeightUnnormalized();
         } else {
             weight = 0;
         }
-
 
         // set explorer particle weight to minimal value if there are no
         // measurements available to reduce noise
@@ -242,8 +214,14 @@ void ParticleFilter<StateType>::measure() {
             weight += m_ObservationModel->measure(m_CurrentList[i]->getState());
         }
         m_CurrentList[i]->setWeight(weight);
+        // Update the weight sum
+        weights_sum += weight;
     }
-    // after measurement we have to re-sort and normalize the particles
+#pragma parallel for
+    for (size_t i = 0; i < m_NumParticles; i++) {
+        m_CurrentList[i]->setNormalization(1.0/weights_sum);
+    }
+    // re-sort the particles
     sort();
 }
 
