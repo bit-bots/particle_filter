@@ -155,7 +155,7 @@ void GaussianMixtureModel::maximization(const Eigen::MatrixXd& dataset) {
 
         omp_destroy_lock(&lck);
 
-        for (int t = 0; t < thread_covariance.size(); ++t) {
+        for (size_t t = 0; t < thread_covariance.size(); ++t) {
             covariance += thread_covariance.at(t);
         }
 

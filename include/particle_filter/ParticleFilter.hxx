@@ -206,7 +206,7 @@ void ParticleFilter<StateType>::drift(geometry_msgs::Vector3 linear,
 
 template <class StateType>
 void ParticleFilter<StateType>::diffuse() {
-#pragma parallel for
+//#pragma omp parallel for
     for (unsigned int i = 0; i < m_NumParticles; i++) {
         m_MovementModel->diffuse(m_CurrentList[i]->m_State);
     }
@@ -221,7 +221,7 @@ void ParticleFilter<StateType>::measure() {
         //    not decay
     }
     double weight;
-#pragma parallel for
+//#pragma omp parallel for
     for (unsigned int i = 0; i < m_NumParticles; i++) {
         // apply observation model
 
