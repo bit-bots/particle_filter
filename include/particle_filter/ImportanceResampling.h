@@ -58,8 +58,8 @@ protected:
     CRandomNumberGenerator m_RNG;
 
 private:
-    bool reset_weights_;
-    double particle_reset_weight_;
+    bool reset_weights_ = true;
+    double particle_reset_weight_ = 0.01;
 };
 
 
