@@ -47,15 +47,26 @@ public:
     inline void setState(const StateType& newState);
 
     /**
-     * @return the weight
+     * @return the normalized weight
      */
     inline double getWeight() const;
+
+    /**
+     * @return the raw weight
+     */
+    inline double getWeightUnnormalized() const;
 
     /**
      * Sets a new weight
      * @param newWeight the new weight
      */
     inline void setWeight(double newWeight);
+
+    /**
+     * Sets the normalization factor
+     * @param newWeight the new weight
+     */
+    inline void setNormalization(double normalization);
 
     bool is_explorer_;
 
@@ -70,6 +81,9 @@ private:
 
     // Stores the importance factor (=weight) of the particle.
     double m_Weight;
+
+    // Stores the normalization
+    double m_normalization = 1;
 };
 
 template <class StateType>
@@ -93,12 +107,22 @@ void Particle<StateType>::setState(const StateType& newState) {
 
 template <class StateType>
 double Particle<StateType>::getWeight() const {
+    return m_Weight * m_normalization;
+}
+
+template <class StateType>
+double Particle<StateType>::getWeightUnnormalized() const {
     return m_Weight;
 }
 
 template <class StateType>
 void Particle<StateType>::setWeight(double newWeight) {
     m_Weight = newWeight;
+}
+
+template <class StateType>
+void Particle<StateType>::setNormalization(double normalization) {
+    m_normalization = normalization;
 }
 }  // namespace particle_filter
 
