@@ -189,7 +189,7 @@ void ParticleFilter<StateType>::measure() {
         //    not decay
     }
     double weight, weights_sum = 0;
-#pragma parallel for
+//#pragma omp parallel for
     for (size_t i = 0; i < m_NumParticles; i++) {
         // apply observation model
 
@@ -212,7 +212,7 @@ void ParticleFilter<StateType>::measure() {
         // Update the weight sum
         weights_sum += weight;
     }
-#pragma parallel for
+//#pragma omp parallel for
     for (size_t i = 0; i < m_NumParticles; i++) {
         m_CurrentList[i]->setNormalization(1.0/weights_sum);
     }
