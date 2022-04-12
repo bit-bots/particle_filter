@@ -165,8 +165,8 @@ void ParticleFilter<StateType>::resample() {
 
 
 template <class StateType>
-void ParticleFilter<StateType>::drift(geometry_msgs::Vector3 linear,
-        geometry_msgs::Vector3 angular) {
+void ParticleFilter<StateType>::drift(geometry_msgs::msg::Vector3 linear,
+        geometry_msgs::msg::Vector3 angular) {
     for (unsigned int i = 0; i < m_NumParticles; i++) {
         m_MovementModel->drift(m_CurrentList[i]->m_State, linear, angular);
     }
@@ -285,22 +285,22 @@ ParticleFilter<StateType>::particleListEnd() {
 }
 
 template <class StateType>
-visualization_msgs::Marker
+visualization_msgs::msg::Marker
 ParticleFilter<StateType>::renderPointsMarker(std::string n_space,
         std::string frame,
-        ros::Duration lifetime,
+        rclcpp::Duration lifetime,
         std_msgs::ColorRGBA color) {
     return StateType::renderPointsMarker(
             m_CurrentList, n_space, frame, lifetime, color);
 }
 
 template <class StateType>
-visualization_msgs::MarkerArray
+visualization_msgs::msg::MarkerArray
 ParticleFilter<StateType>::renderMarkerArray(std::string n_space,
         std::string frame,
-        ros::Duration lifetime,
+        rclcpp::Duration lifetime,
         std_msgs::ColorRGBA color) {
-    visualization_msgs::MarkerArray marker_array;
+    visualization_msgs::msg::MarkerArray marker_array;
 
     for (unsigned int i = 0; i < m_NumParticles; i++) {
         double weight = m_CurrentList[i]->getWeight();

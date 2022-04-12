@@ -245,14 +245,14 @@ std::string GaussianMixtureModel::toString() const {
     return gmm_string.str();
 }
 
-visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
+visualization_msgs::msg::Marker GaussianMixtureModel::renderMarker(float x0,
         float y0,
         float x1,
         float y1,
         int stepcount,
         std::string n_space,
         std::string frame,
-        ros::Duration lifetime,
+        rclcpp::Duration lifetime,
         bool use_color,
         bool use_height,
         float z_offset) const {
@@ -271,12 +271,12 @@ visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
     float x, y;
     float x_stepsize = x_delta / stepcount;
     float y_stepsize = y_delta / stepcount;
-    visualization_msgs::Marker marker;
+    visualization_msgs::msg::Marker marker;
     marker.header.frame_id = frame;
-    marker.header.stamp = ros::Time::now();
+    marker.header.stamp = this->get_clock()->now()();
     marker.ns = n_space;
-    marker.type = visualization_msgs::Marker::POINTS;
-    marker.action = visualization_msgs::Marker::ADD;
+    marker.type = visualization_msgs::msg::Marker::POINTS;
+    marker.action = visualization_msgs::msg::Marker::ADD;
     marker.lifetime = lifetime;
     marker.scale.x = x_stepsize;
     marker.scale.y = y_stepsize;
@@ -291,7 +291,7 @@ visualization_msgs::Marker GaussianMixtureModel::renderMarker(float x0,
         y = y0 + (y_stepsize * y_step);
         for (int x_step = 0; x_step < stepcount; x_step++) {
             x = x0 + (x_stepsize * x_step);
-            geometry_msgs::Point point;
+            geometry_msgs::msg::Point point;
             point.x = x;
             point.y = y;
             if (use_height) {

@@ -10,8 +10,8 @@
 #include <memory>
 #include <string>
 
-#include <ros/console.h>
-#include <ros/ros.h>
+
+#include <rclcpp/rclcpp.hpp>
 
 #include <Eigen/Core>
 
@@ -26,9 +26,9 @@
 #include <particle_filter/gaussian_mixture_model.h>
 
 
-#include <geometry_msgs/Vector3.h>
+#include <geometry_msgs/msg/vector3.hpp>
 #include <std_msgs/ColorRGBA.h>
-#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/MarkerArray.h>
 
 namespace particle_filter {
@@ -364,7 +364,7 @@ public:
      * @param linear Linear movement of the robot during the last filter step
      * @param angular Angular movement of the robot during the last filter step
      */
-    void drift(geometry_msgs::Vector3 linear, geometry_msgs::Vector3 angular);
+    void drift(geometry_msgs::msg::Vector3 linear, geometry_msgs::msg::Vector3 angular);
 
     /**
      * This method "diffuses" the particles using the movement model of the
@@ -402,9 +402,9 @@ public:
      * @param color Color of the rendered marker
      * @return A Marker message containing a point representation of each particle
      */
-    visualization_msgs::Marker renderPointsMarker(std::string n_space,
+    visualization_msgs::msg::Marker renderPointsMarker(std::string n_space,
             std::string frame,
-            ros::Duration lifetime,
+            rclcpp::Duration lifetime,
             std_msgs::ColorRGBA color);
 
 
@@ -420,9 +420,9 @@ public:
      * @return A MarkerArray message containing representations of each
      * particle. The specific Marker type depends on the StateType
      */
-    visualization_msgs::MarkerArray renderMarkerArray(std::string n_space,
+    visualization_msgs::msg::MarkerArray renderMarkerArray(std::string n_space,
             std::string frame,
-            ros::Duration lifetime,
+            rclcpp::Duration lifetime,
             std_msgs::ColorRGBA color);
 
     /**

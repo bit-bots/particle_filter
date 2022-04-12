@@ -10,12 +10,12 @@
 
 #include <algorithm>
 #include <Eigen/Core>
-#include <geometry_msgs/Point.h>
+#include <geometry_msgs/msg/point.hpp>
 #include <std_msgs/ColorRGBA.h>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/msg/marker.hpp>
 
 #include <particle_filter/gaussian.h>
 #include <particle_filter/k_means.h>
@@ -142,14 +142,14 @@ public:
     }
     std::string toString() const;
 
-    visualization_msgs::Marker renderMarker(float x0,
+    visualization_msgs::msg::Marker renderMarker(float x0,
             float y0,
             float x1,
             float y1,
             int stepcount,
             std::string n_space,
             std::string frame,
-            ros::Duration lifetime,
+            rclcpp::Duration lifetime,
             bool use_color = true,
             bool use_height = true,
             float z_offset = 0.0) const;

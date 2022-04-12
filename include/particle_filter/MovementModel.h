@@ -3,7 +3,7 @@
 
 #include <algorithm>
 #include <cmath>
-#include <geometry_msgs/Vector3.h>
+#include <geometry_msgs/msg/vector3.hpp>
 
 namespace particle_filter {
 
@@ -47,8 +47,8 @@ public:
      * @param angular Angular movement of the robot during the last filter step
      */
     virtual void drift(StateType& state,
-            geometry_msgs::Vector3 linear,
-            geometry_msgs::Vector3 angular) const = 0;
+            geometry_msgs::msg::Vector3 linear,
+            geometry_msgs::msg::Vector3 angular) const = 0;
 
     /**
      * This method will be applied in a ParticleFilter after drift(). It can be
