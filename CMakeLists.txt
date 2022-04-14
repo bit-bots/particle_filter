@@ -12,29 +12,14 @@ find_package(rclcpp REQUIRED)
 find_package(eigen_conversions REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(visualization_msgs REQUIRED)
-
-set(INCLUDE_DIRS include ${std_msgs_INCLUDE_DIRS} ${geometry_msgs_INCLUDE_DIRS}
-  ${rclcpp_INCLUDE_DIRS} ${eigen_conversions_INCLUDE_DIRS}
-  ${ament_cmake_INCLUDE_DIRS} ${visualization_msgs_INCLUDE_DIRS})
-include_directories(${INCLUDE_DIRS})
-
-set(LIBRARY_DIRS ${std_msgs_LIBRARY_DIRS} ${geometry_msgs_LIBRARY_DIRS}
-  ${rclcpp_LIBRARY_DIRS} ${eigen_conversions_LIBRARY_DIRS}
-  ${ament_cmake_LIBRARY_DIRS} ${visualization_msgs_LIBRARY_DIRS})
-
-link_directories(${LIBRARY_DIRS})
-
-set(LIBS ${std_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES} ${rclcpp_LIBRARIES}
-  ${eigen_conversions_LIBRARIES} ${ament_cmake_LIBRARIES}
-  ${visualization_msgs_LIBRARIES})
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-add_compile_options(-Wall -Werror -Wno-unused)
-
 find_package(Eigen3 REQUIRED)
 find_package(PkgConfig REQUIRED)
 
-set(CMAKE_CXX_STANDARD 11)
+set(INCLUDE_DIRS include)
+include_directories(${INCLUDE_DIRS})
+
+add_compile_options(-Wall -Werror -Wno-unused)
+
 find_package(OpenMP)
 if(OPENMP_FOUND)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -O3")
@@ -70,18 +55,26 @@ set(SOURCES src/CRandomNumberGenerator.cpp src/gaussian.cpp
   src/gaussian_mixture_model.cpp src/gmm_classifier.cpp src/gmm_regressor.cpp
   src/k_means.cpp src/matrix_io.cpp src/pca.cpp)
 
-set(CODE_LIBRARIES)
-
 add_library(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${LIBS})
+ament_target_dependencies(${PROJECT_NAME}
+  std_msgs 
+  geometry_msgs 
+  rclcpp 
+  eigen_conversions 
+  ament_cmake 
+  visualization_msgs 
+  Eigen3 
+  PkgConfig
+)
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION include/${PROJECT_NAME})
+install(DIRECTORY include/
+    DESTINATION include)
 
 install(TARGETS ${PROJECT_NAME}
-  LIBRARY
-  DESTINATION lib)
+  EXPORT ${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  INCLUDES DESTINATION include)
 
 ament_export_dependencies(std_msgs)
 ament_export_dependencies(geometry_msgs)
@@ -90,10 +83,6 @@ ament_export_dependencies(eigen_conversions)
 ament_export_dependencies(ament_cmake)
 ament_export_dependencies(visualization_msgs)
 ament_export_include_directories(${INCLUDE_DIRS})
-ament_export_libraries(${PROJECT_NAME} ${LIBS})
-
-install(DIRECTORY config  DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
-install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
+ament_export_libraries(${PROJECT_NAME})
 
 ament_package()
