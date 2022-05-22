@@ -29,7 +29,7 @@
 #include <geometry_msgs/msg/vector3.hpp>
 #include <std_msgs/ColorRGBA.h>
 #include <visualization_msgs/msg/marker.hpp>
-#include <visualization_msgs/MarkerArray.h>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 namespace particle_filter {
 

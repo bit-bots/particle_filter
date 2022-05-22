@@ -22,7 +22,7 @@
   <depend>geometry_msgs</depend>
   <depend>visualization_msgs</depend>
   <depend>rosconsole</depend>
-  <depend>eigen_conversions</depend>
+  <depend>tf2_eigen</depend>
 
   <export>
     <bitbots_documentation>
