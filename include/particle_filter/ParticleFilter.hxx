@@ -299,14 +299,15 @@ visualization_msgs::msg::MarkerArray
 ParticleFilter<StateType>::renderMarkerArray(std::string n_space,
         std::string frame,
         rclcpp::Duration lifetime,
-        std_msgs::ColorRGBA color) {
+        std_msgs::msg::ColorRGBA color,
+        rclcpp::Time stamp) {
     visualization_msgs::msg::MarkerArray marker_array;
 
     for (unsigned int i = 0; i < m_NumParticles; i++) {
         double weight = m_CurrentList[i]->getWeight();
         color.r = weight / getMaxParticleWeight();
         marker_array.markers.push_back(m_CurrentList[i]->getState().renderMarker(
-                n_space, frame, lifetime, color));
+                n_space, frame, lifetime, color, stamp));
     }
 
     return marker_array;
