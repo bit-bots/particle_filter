@@ -9,29 +9,17 @@ endif()
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(eigen_conversions REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(eigen3_cmake_module REQUIRED)
+find_package(Eigen3 REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(visualization_msgs REQUIRED)
 
-set(INCLUDE_DIRS include ${std_msgs_INCLUDE_DIRS} ${geometry_msgs_INCLUDE_DIRS}
-  ${rclcpp_INCLUDE_DIRS} ${eigen_conversions_INCLUDE_DIRS}
-  ${ament_cmake_INCLUDE_DIRS} ${visualization_msgs_INCLUDE_DIRS})
+set(INCLUDE_DIRS include)
 include_directories(${INCLUDE_DIRS})
 
-set(LIBRARY_DIRS ${std_msgs_LIBRARY_DIRS} ${geometry_msgs_LIBRARY_DIRS}
-  ${rclcpp_LIBRARY_DIRS} ${eigen_conversions_LIBRARY_DIRS}
-  ${ament_cmake_LIBRARY_DIRS} ${visualization_msgs_LIBRARY_DIRS})
+add_compile_options(-Wall -Wno-unused)
 
-link_directories(${LIBRARY_DIRS})
-
-set(LIBS ${std_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES} ${rclcpp_LIBRARIES}
-  ${eigen_conversions_LIBRARIES} ${ament_cmake_LIBRARIES}
-  ${visualization_msgs_LIBRARIES})
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-add_compile_options(-Wall -Werror -Wno-unused)
-
-find_package(Eigen3 REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -74,6 +62,13 @@ set(CODE_LIBRARIES)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 
+ament_target_dependencies(${PROJECT_NAME}
+    Eigen3
+    geometry_msgs
+    rclcpp
+    std_msgs
+    visualization_msgs)
+
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 install(DIRECTORY include/${PROJECT_NAME}/
@@ -86,14 +81,18 @@ install(TARGETS ${PROJECT_NAME}
 ament_export_dependencies(std_msgs)
 ament_export_dependencies(geometry_msgs)
 ament_export_dependencies(rclcpp)
-ament_export_dependencies(eigen_conversions)
+ament_export_dependencies(tf2_eigen)
 ament_export_dependencies(ament_cmake)
 ament_export_dependencies(visualization_msgs)
 ament_export_include_directories(${INCLUDE_DIRS})
-ament_export_libraries(${PROJECT_NAME} ${LIBS})
+ament_export_libraries(${PROJECT_NAME})
 
-install(DIRECTORY config  DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
-install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
+install(DIRECTORY include/
+    DESTINATION include)
+
+install(TARGETS ${PROJECT_NAME}
+  EXPORT ${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  INCLUDES DESTINATION include)
 
 ament_package()

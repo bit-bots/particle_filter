@@ -27,9 +27,9 @@
 
 
 #include <geometry_msgs/msg/vector3.hpp>
-#include <std_msgs/ColorRGBA.h>
+#include <std_msgs/msg/color_rgba.hpp>
 #include <visualization_msgs/msg/marker.hpp>
-#include <visualization_msgs/MarkerArray.h>
+#include <visualization_msgs/msg/marker_array.hpp>
 
 namespace particle_filter {
 
@@ -423,7 +423,8 @@ public:
     visualization_msgs::msg::MarkerArray renderMarkerArray(std::string n_space,
             std::string frame,
             rclcpp::Duration lifetime,
-            std_msgs::ColorRGBA color);
+            std_msgs::msg::ColorRGBA color,
+            rclcpp::Time stamp);
 
     /**
      * Computes a GMM representation of the current state.

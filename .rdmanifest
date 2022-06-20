@@ -4,7 +4,6 @@ check-presence-script: '#!/bin/bash
 
   test -d $BITBOTS_CATKIN_WORKSPACE/src/particle_filter'
 depends:
-- eigen_conversions
 - geometry_msgs
 - rosconsole
 - roscpp

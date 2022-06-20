@@ -250,6 +250,7 @@ visualization_msgs::msg::Marker GaussianMixtureModel::renderMarker(float x0,
         float x1,
         float y1,
         int stepcount,
+        rclcpp::Time stamp,
         std::string n_space,
         std::string frame,
         rclcpp::Duration lifetime,
@@ -273,7 +274,7 @@ visualization_msgs::msg::Marker GaussianMixtureModel::renderMarker(float x0,
     float y_stepsize = y_delta / stepcount;
     visualization_msgs::msg::Marker marker;
     marker.header.frame_id = frame;
-    marker.header.stamp = this->get_clock()->now()();
+    marker.header.stamp = stamp;
     marker.ns = n_space;
     marker.type = visualization_msgs::msg::Marker::POINTS;
     marker.action = visualization_msgs::msg::Marker::ADD;
@@ -301,14 +302,6 @@ visualization_msgs::msg::Marker GaussianMixtureModel::renderMarker(float x0,
             }
             point.z += z_offset;
             marker.points.push_back(point);
-            if (use_color) {
-                std_msgs::ColorRGBA color;
-                color.a = .8;
-                color.b = 0;
-                color.g = (1 - matrix(y_step, x_step));
-                color.r = matrix(y_step, x_step);
-                marker.colors.push_back(color);
-            }
         }
     }
     return marker;

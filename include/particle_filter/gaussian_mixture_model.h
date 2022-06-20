@@ -17,6 +17,8 @@
 #include <vector>
 #include <visualization_msgs/msg/marker.hpp>
 
+#include <rclcpp/rclcpp.hpp>
+
 #include <particle_filter/gaussian.h>
 #include <particle_filter/k_means.h>
 #include <particle_filter/matrix_io.h>
@@ -147,6 +149,7 @@ public:
             float x1,
             float y1,
             int stepcount,
+            rclcpp::Time stamp,
             std::string n_space,
             std::string frame,
             rclcpp::Duration lifetime,
