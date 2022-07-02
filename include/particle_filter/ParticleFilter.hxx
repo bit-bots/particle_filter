@@ -289,7 +289,7 @@ visualization_msgs::msg::Marker
 ParticleFilter<StateType>::renderPointsMarker(std::string n_space,
         std::string frame,
         rclcpp::Duration lifetime,
-        std_msgs::ColorRGBA color) {
+        std_msgs::msg::ColorRGBA color) {
     return StateType::renderPointsMarker(
             m_CurrentList, n_space, frame, lifetime, color);
 }

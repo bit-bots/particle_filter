@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <Eigen/Core>
 #include <geometry_msgs/msg/point.hpp>
-#include <std_msgs/ColorRGBA.h>
+#include <std_msgs/msg/color_rgba.hpp>
 #include <stdexcept>
 #include <string>
 #include <vector>
