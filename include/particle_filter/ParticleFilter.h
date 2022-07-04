@@ -405,7 +405,7 @@ public:
     visualization_msgs::msg::Marker renderPointsMarker(std::string n_space,
             std::string frame,
             rclcpp::Duration lifetime,
-            std_msgs::ColorRGBA color);
+            std_msgs::msg::ColorRGBA color);
 
 
     /**
