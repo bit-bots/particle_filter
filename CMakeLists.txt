@@ -62,7 +62,7 @@ set(CODE_LIBRARIES)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 
-ament_target_dependencies(${PROJECT_NAME}
+ament_target_dependencies(${PROJECT_NAME} SYSTEM
     Eigen3
     geometry_msgs
     rclcpp
