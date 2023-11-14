@@ -47,7 +47,7 @@ unsigned int ParticleFilter<StateType>::numParticles() const {
 
 template <class StateType>
 void ParticleFilter<StateType>::setObservationModel(
-        std::shared_ptr<ObservationModel<StateType>>& os) {
+        std::shared_ptr<ObservationModel<StateType>> os) {
     m_ObservationModel = os;
 }
 
@@ -59,7 +59,7 @@ ParticleFilter<StateType>::getObservationModel() const {
 
 template <class StateType>
 void ParticleFilter<StateType>::setMovementModel(
-        std::shared_ptr<MovementModel<StateType>>& ms) {
+        std::shared_ptr<MovementModel<StateType>> ms) {
     m_MovementModel = ms;
 }
 

@@ -41,7 +41,7 @@ namespace particle_filter {
  *
  * @brief (Templated) class that defines a particle filter.
  *
- * A particle filter is a descrete method to describe and compute with a
+ * A particle filter is a discrete method to describe and compute with a
  * probability distribution. In other words, it is an implementation of a
  * recursive Bayesian filter by Monte Carlo Methods. The sequential importance
  * sampling (SIS) used is also known as bootstrap filtering, the condensation
@@ -193,7 +193,7 @@ public:
      * numParticles elements of type StateType.
      * @param numParticles Number of particles for the filter. Has to be greater
      *        than zero.
-     * @param os ObservationModel to use for weightening particles
+     * @param os ObservationModel to use for weighting particles
      * @param ms MovementModel to use for propagation of particles
      */
     ParticleFilter<StateType>(unsigned int numParticles,
@@ -213,7 +213,7 @@ public:
     /**
      * @param os new observation model
      */
-    void setObservationModel(std::shared_ptr<ObservationModel<StateType>>& os);
+    void setObservationModel(std::shared_ptr<ObservationModel<StateType>> os);
 
     /**
      * @return the observation model the particle filter currently uses
@@ -223,7 +223,7 @@ public:
     /**
      * @param ms new movement model
      */
-    void setMovementModel(std::shared_ptr<MovementModel<StateType>>& ms);
+    void setMovementModel(std::shared_ptr<MovementModel<StateType>> ms);
 
     /**
      * @return the movement model the particle filter currently uses
@@ -286,7 +286,7 @@ public:
     const Particle<StateType>* getBestParticle() const;
 
     /**
-     * @return State that is carried by the particle with heighest weight.
+     * @return State that is carried by the particle with highest weight.
      */
     const StateType& getBestState() const;
 
