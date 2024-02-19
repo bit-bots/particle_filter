@@ -9,12 +9,11 @@
   <maintainer email="5fiedler@informatik.uni-hamburg.de">Niklas Fiedler</maintainer>
   <maintainer email="info@bit-bots.de">Hamburg Bit-Bots</maintainer>
 
+  <license>MIT</license>
+
   <author email="2hartfil@informatik.uni-hamburg.de">Judith Hartfill</author>
   <author email="5fiedler@informatik.uni-hamburg.de">Niklas Fiedler</author>
   <author email="info@bit-bots.de">Hamburg Bit-Bots</author>
-
-  <license>MIT</license>
-
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
