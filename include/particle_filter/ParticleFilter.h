@@ -377,7 +377,7 @@ public:
      * of the particle filter.
      */
     virtual void measure();
-
+    virtual void measure_bulk();
     /**
      * Returns an iterator to the particle list's beginning.
      *

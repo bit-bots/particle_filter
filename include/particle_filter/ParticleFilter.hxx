@@ -181,6 +181,52 @@ void ParticleFilter<StateType>::diffuse() {
 }
 
 template <class StateType>
+void ParticleFilter<StateType>::measure_bulk() {
+    // measure only, if there are measurements available
+    if (!m_ObservationModel->measurements_available()) {
+        //    return;
+        //    currently, this results in a problem, as the particle weight does
+        //    not decay
+    }
+    double weight, weights_sum = 0;
+    std::vector<double> new_weights;
+    if (m_ObservationModel->measurements_available()) {
+        new_weights = std::vector<double>(m_NumParticles, m_ObservationModel->get_min_weight());
+    } else {
+        new_weights = m_ObservationModel->measure_bulk(m_CurrentList);
+    }
+//#pragma omp parallel for
+    for (size_t i = 0; i < m_NumParticles; i++) {
+        // apply observation model
+
+        // accumulate the weight when it is defined in the observation model
+        if (m_ObservationModel->accumulate_weights_) {
+            weight = m_CurrentList[i]->getWeightUnnormalized();
+        } else {
+            weight = 0;
+        }
+
+        // set explorer particle weight to minimal value if there are no
+        // measurements available to reduce noise
+        if (m_CurrentList[i]->is_explorer_ &&
+                !m_ObservationModel->measurements_available()) {
+            weight += m_ObservationModel->get_min_weight();
+        } else {
+            weight += new_weights[i];
+        }
+        m_CurrentList[i]->setWeight(weight);
+        // Update the weight sum
+        weights_sum += weight;
+    }
+//#pragma omp parallel for
+    for (size_t i = 0; i < m_NumParticles; i++) {
+        m_CurrentList[i]->setNormalization(1.0/weights_sum);
+    }
+    // re-sort the particles
+    sort();
+}
+
+template <class StateType>
 void ParticleFilter<StateType>::measure() {
     // measure only, if there are measurements available
     if (!m_ObservationModel->measurements_available()) {

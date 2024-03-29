@@ -43,6 +43,7 @@ public:
      * @return importance weight for the given state (positive, non-zero value).
      */
     virtual double measure(const StateType& state) const = 0;
+    virtual std::vector<double> measure_bulk(std::vector<Particle<StateType>*> state) = 0;
 
     virtual bool measurements_available() = 0;
     // virtual void clear_measurement();
