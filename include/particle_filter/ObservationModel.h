@@ -52,6 +52,7 @@ public:
     bool accumulate_weights_ = false;
 
 private:
+    
 };
 
 template <class StateType>

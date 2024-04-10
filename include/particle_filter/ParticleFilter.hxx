@@ -191,9 +191,9 @@ void ParticleFilter<StateType>::measure_bulk() {
     double weight, weights_sum = 0;
     std::vector<double> new_weights;
     if (m_ObservationModel->measurements_available()) {
-        new_weights = std::vector<double>(m_NumParticles, m_ObservationModel->get_min_weight());
-    } else {
         new_weights = m_ObservationModel->measure_bulk(m_CurrentList);
+    } else {
+        new_weights = std::vector<double>(m_NumParticles, m_ObservationModel->get_min_weight());
     }
 //#pragma omp parallel for
     for (size_t i = 0; i < m_NumParticles; i++) {
