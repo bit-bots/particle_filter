@@ -31,6 +31,8 @@
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
+#include <chrono>
+
 namespace particle_filter {
 
 /**
@@ -198,7 +200,7 @@ public:
      */
     ParticleFilter<StateType>(unsigned int numParticles,
             std::shared_ptr<ObservationModel<StateType>> os,
-            std::shared_ptr<MovementModel<StateType>> ms);
+            std::shared_ptr<MovementModel<StateType>> ms, rclcpp::Node::SharedPtr node);
 
     /**
      * The destructor releases the particle lists.
@@ -491,6 +493,7 @@ protected:
     void normalize();
 
 private:
+    rclcpp::Node::SharedPtr m_node;
     // Particle lists.
     // The particles are drawn from m_LastList to m_CurrentList to avoid new and
     // delete commands. In each run, the pointers m_CurrentList and m_LastList
@@ -521,6 +524,8 @@ private:
     // Stores which resampling mode is set, default is
     // ResamplingMode::RESAMPLE_NEFF
     ResamplingMode m_ResamplingMode;
+    int m_time_count;
+    std::chrono::nanoseconds m_time_sum_ns; 
 };
 
 }  // namespace particle_filter

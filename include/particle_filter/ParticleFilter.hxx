@@ -4,7 +4,8 @@ namespace particle_filter {
 template <class StateType>
 ParticleFilter<StateType>::ParticleFilter(unsigned int numParticles,
         std::shared_ptr<ObservationModel<StateType>> os,
-        std::shared_ptr<MovementModel<StateType>> ms) :
+        std::shared_ptr<MovementModel<StateType>> ms, rclcpp::Node::SharedPtr node) :
+        m_node(node),
         m_NumParticles(numParticles),
         m_ObservationModel(os),
         m_MovementModel(ms),
@@ -182,6 +183,7 @@ void ParticleFilter<StateType>::diffuse() {
 
 template <class StateType>
 void ParticleFilter<StateType>::measure_bulk() {
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     // measure only, if there are measurements available
     if (!m_ObservationModel->measurements_available()) {
         //    return;
@@ -224,10 +226,21 @@ void ParticleFilter<StateType>::measure_bulk() {
     }
     // re-sort the particles
     sort();
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::chrono::nanoseconds dur = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    m_time_sum_ns = m_time_sum_ns + dur;
+    m_time_count += 1;
+    RCLCPP_INFO_STREAM(m_node->get_logger(), "current time: " << dur.count());
+    if(m_time_count >=100) {
+        RCLCPP_INFO_STREAM(m_node->get_logger(), "average time after 100 measurements: " << (m_time_sum_ns / m_time_count).count());
+        m_time_sum_ns = std::chrono::nanoseconds::zero();
+        m_time_count = 0;
+    }
 }
 
 template <class StateType>
 void ParticleFilter<StateType>::measure() {
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     // measure only, if there are measurements available
     if (!m_ObservationModel->measurements_available()) {
         //    return;
@@ -264,6 +277,16 @@ void ParticleFilter<StateType>::measure() {
     }
     // re-sort the particles
     sort();
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::chrono::nanoseconds dur = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+    m_time_sum_ns = m_time_sum_ns + dur;
+    m_time_count += 1;
+    RCLCPP_INFO_STREAM(m_node->get_logger(), "current time: " << dur.count());
+    if(m_time_count >=100) {
+        RCLCPP_INFO_STREAM(m_node->get_logger(), "average time after 100 measurements: " << (m_time_sum_ns / m_time_count).count());
+        m_time_sum_ns = std::chrono::nanoseconds::zero();
+        m_time_count = 0;
+    }
 }
 
 template <class StateType>
