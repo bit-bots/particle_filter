@@ -30,34 +30,33 @@ namespace particle_filter {
 
 template <class StateType>
 class MovementModel {
-public:
-    /**
-     * The destructor is empty.
-     */
-    virtual ~MovementModel();
+ public:
+  /**
+   * The destructor is empty.
+   */
+  virtual ~MovementModel();
 
-    /**
-     * This is the main method of MovementModel. It takes a state reference as
-     * argument and is supposed to extract the state's variables and manipulate
-     * them. dt means delta t and defines the time in seconds that has passed
-     * since the last filter update.
-     * Define this function in your sub-class!
-     * @param state Reference to the state that has to be manipulated.
-     * @param linear Linear movement of the robot during the last filter step
-     * @param angular Angular movement of the robot during the last filter step
-     */
-    virtual void drift(StateType& state,
-            geometry_msgs::msg::Vector3 linear,
-            geometry_msgs::msg::Vector3 angular) const = 0;
+  /**
+   * This is the main method of MovementModel. It takes a state reference as
+   * argument and is supposed to extract the state's variables and manipulate
+   * them. dt means delta t and defines the time in seconds that has passed
+   * since the last filter update.
+   * Define this function in your sub-class!
+   * @param state Reference to the state that has to be manipulated.
+   * @param linear Linear movement of the robot during the last filter step
+   * @param angular Angular movement of the robot during the last filter step
+   */
+  virtual void drift(StateType& state, geometry_msgs::msg::Vector3 linear,
+                     geometry_msgs::msg::Vector3 angular) const = 0;
 
-    /**
-     * This method will be applied in a ParticleFilter after drift(). It can be
-     * used to add a small jitter to the state.
-     * @param state Reference to the state that has to be manipulated.
-     */
-    virtual void diffuse(StateType& state) const = 0;
+  /**
+   * This method will be applied in a ParticleFilter after drift(). It can be
+   * used to add a small jitter to the state.
+   * @param state Reference to the state that has to be manipulated.
+   */
+  virtual void diffuse(StateType& state) const = 0;
 
-private:
+ private:
 };
 
 template <class StateType>

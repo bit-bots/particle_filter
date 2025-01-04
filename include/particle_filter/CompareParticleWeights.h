@@ -21,15 +21,15 @@ namespace particle_filter {
  */
 template <class StateType>
 class CompareParticleWeights {
-public:
-    /**
-     * @return true if the weight of the particle p1 is higher than the weight
-     * of particle p2.
-     */
-    bool operator()(const particle_filter::Particle<StateType>* p1,
-            const particle_filter::Particle<StateType>* p2) const {
-        return p1->getWeight() > p2->getWeight();
-    }
+ public:
+  /**
+   * @return true if the weight of the particle p1 is higher than the weight
+   * of particle p2.
+   */
+  bool operator()(const particle_filter::Particle<StateType>* p1,
+                  const particle_filter::Particle<StateType>* p2) const {
+    return p1->getWeight() > p2->getWeight();
+  }
 };
 
 }  // namespace particle_filter

@@ -20,109 +20,107 @@ namespace particle_filter {
  */
 template <class StateType>
 class Particle {
-public:
-    /**
-     * This constructor assigns the given state to the member m_State
-     * and the given weight to the member m_Weight.
-     * @param state The initial state of the particle
-     * @param weight The initial weight of the particle
-     */
-    Particle<StateType>(const StateType& state, double weight);
+ public:
+  /**
+   * This constructor assigns the given state to the member m_State
+   * and the given weight to the member m_Weight.
+   * @param state The initial state of the particle
+   * @param weight The initial weight of the particle
+   */
+  Particle<StateType>(const StateType& state, double weight);
 
-    /**
-     * The destructor is empty.
-     */
-    virtual ~Particle();
+  /**
+   * The destructor is empty.
+   */
+  virtual ~Particle();
 
-    /**
-     * @return reference to the state of the particle
-     */
-    inline const StateType& getState() const;
+  /**
+   * @return reference to the state of the particle
+   */
+  inline const StateType& getState() const;
 
-    /**
-     * Sets a new state (assignment operator is used, be sure it works
-     * for StateType!).
-     * @param newState a new state for the particle.
-     */
-    inline void setState(const StateType& newState);
+  /**
+   * Sets a new state (assignment operator is used, be sure it works
+   * for StateType!).
+   * @param newState a new state for the particle.
+   */
+  inline void setState(const StateType& newState);
 
-    /**
-     * @return the normalized weight
-     */
-    inline double getWeight() const;
+  /**
+   * @return the normalized weight
+   */
+  inline double getWeight() const;
 
-    /**
-     * @return the raw weight
-     */
-    inline double getWeightUnnormalized() const;
+  /**
+   * @return the raw weight
+   */
+  inline double getWeightUnnormalized() const;
 
-    /**
-     * Sets a new weight
-     * @param newWeight the new weight
-     */
-    inline void setWeight(double newWeight);
+  /**
+   * Sets a new weight
+   * @param newWeight the new weight
+   */
+  inline void setWeight(double newWeight);
 
-    /**
-     * Sets the normalization factor
-     * @param newWeight the new weight
-     */
-    inline void setNormalization(double normalization);
+  /**
+   * Sets the normalization factor
+   * @param newWeight the new weight
+   */
+  inline void setNormalization(double normalization);
 
-    bool is_explorer_;
+  bool is_explorer_;
 
-private:
-    // make ParticleFilter a friend that can have non-const access
-    // to m_State
-    template <class T>
-    friend class ParticleFilter;
+ private:
+  // make ParticleFilter a friend that can have non-const access
+  // to m_State
+  template <class T>
+  friend class ParticleFilter;
 
-    // Stores the state of the particle.
-    StateType m_State;
+  // Stores the state of the particle.
+  StateType m_State;
 
-    // Stores the importance factor (=weight) of the particle.
-    double m_Weight;
+  // Stores the importance factor (=weight) of the particle.
+  double m_Weight;
 
-    // Stores the normalization
-    double m_normalization = 1;
+  // Stores the normalization
+  double m_normalization = 1;
 };
 
 template <class StateType>
-Particle<StateType>::Particle(const StateType& state, double weight) :
-        is_explorer_(false),
-        m_State(state),
-        m_Weight(weight) {}
+Particle<StateType>::Particle(const StateType& state, double weight)
+    : is_explorer_(false), m_State(state), m_Weight(weight) {}
 
 template <class StateType>
 Particle<StateType>::~Particle<StateType>() {}
 
 template <class StateType>
 const StateType& Particle<StateType>::getState() const {
-    return m_State;
+  return m_State;
 }
 
 template <class StateType>
 void Particle<StateType>::setState(const StateType& newState) {
-    m_State = newState;
+  m_State = newState;
 }
 
 template <class StateType>
 double Particle<StateType>::getWeight() const {
-    return m_Weight * m_normalization;
+  return m_Weight * m_normalization;
 }
 
 template <class StateType>
 double Particle<StateType>::getWeightUnnormalized() const {
-    return m_Weight;
+  return m_Weight;
 }
 
 template <class StateType>
 void Particle<StateType>::setWeight(double newWeight) {
-    m_Weight = newWeight;
+  m_Weight = newWeight;
 }
 
 template <class StateType>
 void Particle<StateType>::setNormalization(double normalization) {
-    m_normalization = normalization;
+  m_normalization = normalization;
 }
 }  // namespace particle_filter
 

@@ -22,29 +22,28 @@ namespace particle_filter {
 
 template <class StateType>
 class StateDistribution {
-public:
-    /**
-     * The constructor of this base class is empty.
-     */
-    StateDistribution<StateType>();
+ public:
+  /**
+   * The constructor of this base class is empty.
+   */
+  StateDistribution<StateType>();
 
-    /**
-     * The destructor is empty.
-     */
-    virtual ~StateDistribution();
+  /**
+   * The destructor is empty.
+   */
+  virtual ~StateDistribution();
 
-    /**
-     * This is the main method of StateDistribution. It has to return a (random)
-     * state, drawn from your distribution. ParticleFilter will copy the state
-     * using the assignment operator, so be sure your state supports it!
-     * Define this method in your sub-class!
-     * @return Drawn state from the distribution.
-     */
-    virtual const StateType draw() const = 0;
+  /**
+   * This is the main method of StateDistribution. It has to return a (random)
+   * state, drawn from your distribution. ParticleFilter will copy the state
+   * using the assignment operator, so be sure your state supports it!
+   * Define this method in your sub-class!
+   * @return Drawn state from the distribution.
+   */
+  virtual const StateType draw() const = 0;
 
-private:
+ private:
 };
-
 
 template <class StateType>
 StateDistribution<StateType>::StateDistribution() {}

@@ -1,9 +1,8 @@
+#include <particle_filter/CRandomNumberGenerator.h>
+
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
-
-
-#include <particle_filter/CRandomNumberGenerator.h>
 
 using namespace particle_filter;
 
@@ -19,44 +18,42 @@ using namespace particle_filter;
  * @author Stephan Wirth
  */
 
-CRandomNumberGenerator::CRandomNumberGenerator() {
-    init();
-}
+CRandomNumberGenerator::CRandomNumberGenerator() { init(); }
 
 CRandomNumberGenerator::~CRandomNumberGenerator() {}
 
 void CRandomNumberGenerator::init() {
-    srand(time(0));
-    m_GaussianBufferFilled = false;
+  srand(time(0));
+  m_GaussianBufferFilled = false;
 }
 
 double CRandomNumberGenerator::getGaussian(double standardDeviation) const {
-    if (standardDeviation < 0) {
-        standardDeviation = -standardDeviation;
-    }
+  if (standardDeviation < 0) {
+    standardDeviation = -standardDeviation;
+  }
 
-    if (m_GaussianBufferFilled == true) {
-        m_GaussianBufferFilled = false;
-        return standardDeviation * m_GaussianBufferVariable;
-    }
-    double x1, x2, w, y1, y2;
-    do {
-        x1 = getUniform(-1.0, 1.0);
-        x2 = getUniform(-1.0, 1.0);
-        w = x1 * x1 + x2 * x2;
-    } while (w >= 1.0);
+  if (m_GaussianBufferFilled == true) {
+    m_GaussianBufferFilled = false;
+    return standardDeviation * m_GaussianBufferVariable;
+  }
+  double x1, x2, w, y1, y2;
+  do {
+    x1 = getUniform(-1.0, 1.0);
+    x2 = getUniform(-1.0, 1.0);
+    w = x1 * x1 + x2 * x2;
+  } while (w >= 1.0);
 
-    w = sqrt((-2.0 * log(w)) / w);
-    y1 = x1 * w;
-    y2 = x2 * w;
-    // now y1 and y2 are N(0,1) distributed
-    // we use only one, so we store the other
-    m_GaussianBufferVariable = y2;
-    m_GaussianBufferFilled = true;
-    return standardDeviation * y1;
+  w = sqrt((-2.0 * log(w)) / w);
+  y1 = x1 * w;
+  y2 = x2 * w;
+  // now y1 and y2 are N(0,1) distributed
+  // we use only one, so we store the other
+  m_GaussianBufferVariable = y2;
+  m_GaussianBufferFilled = true;
+  return standardDeviation * y1;
 }
 
 double CRandomNumberGenerator::getUniform(double min, double max) const {
-    double range = max - min;
-    return 1.0 * rand() / RAND_MAX * range + min;
+  double range = max - min;
+  return 1.0 * rand() / RAND_MAX * range + min;
 }

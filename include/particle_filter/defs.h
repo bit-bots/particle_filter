@@ -1,9 +1,9 @@
-//#########################################################//
-//#                                                       #//
-//# gaussian_mixture_models  defs.h                       #//
-//# Roberto Capobianco  <capobianco@dis.uniroma1.it>      #//
-//#                                                       #//
-//#########################################################//
+// #########################################################//
+// #                                                       #//
+// # gaussian_mixture_models  defs.h                       #//
+// # Roberto Capobianco  <capobianco@dis.uniroma1.it>      #//
+// #                                                       #//
+// #########################################################//
 
 #ifndef _DEFS_H_
 #define _DEFS_H_
