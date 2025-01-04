@@ -5,8 +5,8 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _MATRIX_IO_H_
-#define _MATRIX_IO_H_
+#ifndef _MATRIX_IO_HPP_
+#define _MATRIX_IO_HPP_
 
 #include <Eigen/Core>
 #include <string>
@@ -20,4 +20,4 @@ class MatrixIO {
   void writeToFile(const std::string filename, const Eigen::MatrixXd& matrix);
 };
 
-#endif  // _MATRIX_IO_H_
+#endif  // _MATRIX_IO_HPP_

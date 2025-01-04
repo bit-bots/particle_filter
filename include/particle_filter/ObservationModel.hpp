@@ -1,5 +1,5 @@
-#ifndef OBSERVATIONSTRATEGY_H
-#define OBSERVATIONSTRATEGY_H
+#ifndef OBSERVATIONSTRATEGY_HPP
+#define OBSERVATIONSTRATEGY_HPP
 
 #include <cmath>
 
@@ -57,4 +57,4 @@ template <class StateType>
 ObservationModel<StateType>::~ObservationModel() {}
 
 }  // namespace particle_filter
-#endif
+#endif  // OBSERVATIONSTRATEGY_HPP

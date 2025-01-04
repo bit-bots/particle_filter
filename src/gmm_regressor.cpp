@@ -6,11 +6,11 @@
 // #########################################################//
 
 #include <omp.h>
-#include <particle_filter/gmm_regressor.h>
-#include <particle_filter/matrix_io.h>
 
 #include <Eigen/Core>
 #include <iostream>
+#include <particle_filter/gmm_regressor.hpp>
+#include <particle_filter/matrix_io.hpp>
 #include <set>
 #include <stdexcept>
 #include <vector>

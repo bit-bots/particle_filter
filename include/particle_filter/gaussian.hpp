@@ -5,17 +5,17 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _GAUSSIAN_H_
-#define _GAUSSIAN_H_
+#ifndef _GAUSSIAN_HPP_
+#define _GAUSSIAN_HPP_
 
 #include <math.h>
-#include <particle_filter/defs.h>
 #include <stdlib.h>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/LU>
 #include <iostream>
+#include <particle_filter/defs.hpp>
 #include <stdexcept>
 #include <string>
 
@@ -60,4 +60,4 @@ class Gaussian {
 };
 }  // namespace gmms
 
-#endif  // _GAUSSIAN_H_
+#endif  // _GAUSSIAN_HPP_

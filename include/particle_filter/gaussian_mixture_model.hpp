@@ -5,16 +5,15 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _GAUSSIAN_MIXTURE_MODEL_H_
-#define _GAUSSIAN_MIXTURE_MODEL_H_
-
-#include <particle_filter/gaussian.h>
-#include <particle_filter/k_means.h>
-#include <particle_filter/matrix_io.h>
+#ifndef _GAUSSIAN_MIXTURE_MODEL_HPP_
+#define _GAUSSIAN_MIXTURE_MODEL_HPP_
 
 #include <Eigen/Core>
 #include <algorithm>
 #include <geometry_msgs/msg/point.hpp>
+#include <particle_filter/gaussian.hpp>
+#include <particle_filter/k_means.hpp>
+#include <particle_filter/matrix_io.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/color_rgba.hpp>
 #include <stdexcept>
@@ -170,4 +169,4 @@ class GaussianMixtureModel {
 };
 }  // namespace gmms
 
-#endif  // _GAUSSIAN_MIXTURE_MODEL_H_
+#endif  // _GAUSSIAN_MIXTURE_MODEL_HPP_

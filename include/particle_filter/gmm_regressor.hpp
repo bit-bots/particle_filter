@@ -5,13 +5,12 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _GMM_REGRESSOR_H_
-#define _GMM_REGRESSOR_H_
-
-#include <particle_filter/gaussian_mixture_model.h>
+#ifndef _GMM_REGRESSOR_HPP_
+#define _GMM_REGRESSOR_HPP_
 
 #include <Eigen/Core>
 #include <memory>
+#include <particle_filter/gaussian_mixture_model.hpp>
 #include <string>
 #include <vector>
 
@@ -66,4 +65,4 @@ class GMMRegressor {
 };
 }  // namespace gmms
 
-#endif  // _GMM_REGRESSOR_H_
+#endif  // _GMM_REGRESSOR_HPP_

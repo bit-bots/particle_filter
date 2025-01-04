@@ -5,13 +5,12 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _GMM_CLASSIFIER_H_
-#define _GMM_CLASSIFIER_H_
-
-#include <particle_filter/gaussian_mixture_model.h>
+#ifndef _GMM_CLASSIFIER_HPP_
+#define _GMM_CLASSIFIER_HPP_
 
 #include <Eigen/Core>
 #include <memory>
+#include <particle_filter/gaussian_mixture_model.hpp>
 #include <vector>
 
 namespace gmms {
@@ -57,4 +56,4 @@ class GMMClassifier {
 };
 }  // namespace gmms
 
-#endif  // _GMM_CLASSIFIER_H_
+#endif  // _GMM_CLASSIFIER_HPP_

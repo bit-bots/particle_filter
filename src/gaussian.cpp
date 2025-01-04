@@ -5,10 +5,9 @@
 // #                                                       #//
 // #########################################################//
 
-#include <particle_filter/gaussian.h>
-
 #include <Eigen/Eigenvalues>
 #include <cmath>
+#include <particle_filter/gaussian.hpp>
 
 namespace gmms {
 double Gaussian::evaluate_point(const Eigen::VectorXd& pt) const {

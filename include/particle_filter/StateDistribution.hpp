@@ -1,5 +1,6 @@
-#ifndef STATEDISTRIBUTION_H
-#define STATEDISTRIBUTION_H
+#ifndef STATEDISTRIBUTION_HPP
+#define STATEDISTRIBUTION_HPP
+
 namespace particle_filter {
 
 /**
@@ -53,4 +54,4 @@ StateDistribution<StateType>::~StateDistribution() {}
 
 }  // namespace particle_filter
 
-#endif  // STATEDISTRIBUTION_H
+#endif  // STATEDISTRIBUTION_HPP

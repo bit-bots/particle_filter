@@ -1,15 +1,7 @@
-#ifndef PARTICLEFILTER_H
-#define PARTICLEFILTER_H
+#ifndef PARTICLEFILTER_HPP
+#define PARTICLEFILTER_HPP
 
 #include <omp.h>
-#include <particle_filter/CompareParticleWeights.h>
-#include <particle_filter/ImportanceResampling.h>
-#include <particle_filter/MovementModel.h>
-#include <particle_filter/ObservationModel.h>
-#include <particle_filter/Particle.h>
-#include <particle_filter/ResamplingStrategy.h>
-#include <particle_filter/StateDistribution.h>
-#include <particle_filter/gaussian_mixture_model.h>
 
 #include <Eigen/Core>
 #include <cassert>
@@ -18,6 +10,14 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <particle_filter/CompareParticleWeights.hpp>
+#include <particle_filter/ImportanceResampling.hpp>
+#include <particle_filter/MovementModel.hpp>
+#include <particle_filter/ObservationModel.hpp>
+#include <particle_filter/Particle.hpp>
+#include <particle_filter/ResamplingStrategy.hpp>
+#include <particle_filter/StateDistribution.hpp>
+#include <particle_filter/gaussian_mixture_model.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/color_rgba.hpp>
 #include <string>
@@ -504,6 +504,6 @@ class ParticleFilter {
 }  // namespace particle_filter
 
 // include template implementation
-#include "ParticleFilter.hxx"
+#include <ParticleFilter.hxx>
 
-#endif
+#endif  // PARTICLEFILTER_HPP

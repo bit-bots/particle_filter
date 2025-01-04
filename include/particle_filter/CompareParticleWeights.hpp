@@ -1,7 +1,7 @@
-#ifndef COMPAREPARTICLEWEIGHTS_H
-#define COMPAREPARTICLEWEIGHTS_H
+#ifndef COMPAREPARTICLEWEIGHTS_HPP
+#define COMPAREPARTICLEWEIGHTS_HPP
 
-#include "particle_filter/Particle.h"
+#include <particle_filter/Particle.hpp>
 
 namespace particle_filter {
 
@@ -34,4 +34,4 @@ class CompareParticleWeights {
 
 }  // namespace particle_filter
 
-#endif
+#endif  // COMPAREPARTICLEWEIGHTS_HPP

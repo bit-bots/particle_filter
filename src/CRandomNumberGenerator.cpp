@@ -1,8 +1,7 @@
-#include <particle_filter/CRandomNumberGenerator.h>
-
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <particle_filter/CRandomNumberGenerator.hpp>
 
 using namespace particle_filter;
 

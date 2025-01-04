@@ -5,12 +5,11 @@
 // #                                                       #//
 // #########################################################//
 
-#include <particle_filter/k_means.h>
-
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
 #include <limits>
+#include <particle_filter/k_means.hpp>
 #include <set>
 #include <stdexcept>
 

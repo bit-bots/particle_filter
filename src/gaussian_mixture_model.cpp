@@ -12,11 +12,11 @@
 // #########################################################//
 
 #include <omp.h>
-#include <particle_filter/gaussian_mixture_model.h>
 
 #include <cmath>
 #include <ctime>
 #include <iostream>
+#include <particle_filter/gaussian_mixture_model.hpp>
 
 namespace gmms {
 void GaussianMixtureModel::initialize(const Eigen::MatrixXd& dataset) {

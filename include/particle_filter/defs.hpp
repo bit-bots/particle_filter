@@ -5,9 +5,9 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _DEFS_H_
-#define _DEFS_H_
+#ifndef _DEFS_HPP_
+#define _DEFS_HPP_
 
 #define M_EPS (1E-7)
 
-#endif  // _DEFS_H_
+#endif  // _DEFS_HPP_

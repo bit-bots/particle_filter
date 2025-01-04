@@ -1,7 +1,7 @@
-#ifndef PARTICLE_H
-#define PARTICLE_H
+#ifndef PARTICLE_HPP
+#define PARTICLE_HPP
 
-#include "particle_filter/ParticleFilter.h"
+#include <particle_filter/ParticleFilter.hpp>
 
 namespace particle_filter {
 /**
@@ -124,4 +124,4 @@ void Particle<StateType>::setNormalization(double normalization) {
 }
 }  // namespace particle_filter
 
-#endif
+#endif  // PARTICLE_HPP

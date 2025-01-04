@@ -1,10 +1,9 @@
-#ifndef IMPORTANCERESAMPLING_H
-#define IMPORTANCERESAMPLING_H
+#ifndef IMPORTANCERESAMPLING_HPP
+#define IMPORTANCERESAMPLING_HPP
 
-#include <particle_filter/ResamplingStrategy.h>
-
-#include "particle_filter/CRandomNumberGenerator.h"
-#include "particle_filter/Particle.h"
+#include <particle_filter/CRandomNumberGenerator.hpp>
+#include <particle_filter/Particle.hpp>
+#include <particle_filter/ResamplingStrategy.hpp>
 
 namespace particle_filter {
 
@@ -96,4 +95,4 @@ void ImportanceResampling<StateType>::resample(const ParticleList& sourceList,
   }
 }
 }  // namespace particle_filter
-#endif  // IMPORTANCERESAMPLING_H
+#endif  // IMPORTANCERESAMPLING_HPP

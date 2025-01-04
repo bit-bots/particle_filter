@@ -1,8 +1,7 @@
-#ifndef RESAMPLINGSTRATEGY_H
-#define RESAMPLINGSTRATEGY_H
+#ifndef RESAMPLINGSTRATEGY_HPP
+#define RESAMPLINGSTRATEGY_HPP
 
-#include <particle_filter/Particle.h>
-
+#include <particle_filter/Particle.hpp>
 #include <vector>
 
 namespace particle_filter {
@@ -54,4 +53,4 @@ template <class StateType>
 ResamplingStrategy<StateType>::~ResamplingStrategy() {}
 
 }  // namespace particle_filter
-#endif  // RESAMPLINGSTRATEGY_H
+#endif  // RESAMPLINGSTRATEGY_HPP

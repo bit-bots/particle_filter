@@ -1,7 +1,7 @@
-#ifndef RANDOMNUMBERGENERATOR_H
-#define RANDOMNUMBERGENERATOR_H
+#ifndef RANDOMNUMBERGENERATOR_HPP
+#define RANDOMNUMBERGENERATOR_HPP
 
-#include "particle_filter/RandomNumberGenerationStrategy.h"
+#include <particle_filter/RandomNumberGenerationStrategy.hpp>
 
 namespace particle_filter {
 
@@ -62,4 +62,4 @@ class CRandomNumberGenerator : public RandomNumberGenerationStrategy {
 
 }  // namespace particle_filter
 
-#endif  // RANDOMNUMBERGENERATOR_H
+#endif  // RANDOMNUMBERGENERATOR_HPP

@@ -1,5 +1,5 @@
-#ifndef MOVEMENTSTRATEGY_H
-#define MOVEMENTSTRATEGY_H
+#ifndef MOVEMENTSTRATEGY_HPP
+#define MOVEMENTSTRATEGY_HPP
 
 #include <algorithm>
 #include <cmath>
@@ -63,4 +63,4 @@ template <class StateType>
 MovementModel<StateType>::~MovementModel() {}
 
 }  // namespace particle_filter
-#endif
+#endif  // MOVEMENTSTRATEGY_HPP

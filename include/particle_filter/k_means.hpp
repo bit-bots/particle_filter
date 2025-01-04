@@ -5,8 +5,8 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _K_MEANS_H_
-#define _K_MEANS_H_
+#ifndef _K_MEANS_HPP_
+#define _K_MEANS_HPP_
 
 #include <Eigen/Core>
 #include <vector>
@@ -55,4 +55,4 @@ class KMeans {
 };
 }  // namespace gmms
 
-#endif  // _K_MEANS_H_
+#endif  // _K_MEANS_HPP_

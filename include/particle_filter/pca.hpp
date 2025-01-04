@@ -5,8 +5,8 @@
 // #                                                       #//
 // #########################################################//
 
-#ifndef _PCA_H_
-#define _PCA_H_
+#ifndef _PCA_HPP_
+#define _PCA_HPP_
 
 #include <Eigen/Core>
 #include <vector>
@@ -35,4 +35,4 @@ class PCA {
 };
 }  // namespace gmms
 
-#endif  // _PCA_H_
+#endif  // _PCA_HPP_
