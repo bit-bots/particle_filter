@@ -23,7 +23,10 @@ namespace gmms {
 class Gaussian {
  public:
   // constructors
-  Gaussian() { dimensionality_ = 0; };
+  Gaussian() {
+    dimensionality_ = 0;
+    cov_abs_determinant_ = 0.0;
+  }
   Gaussian(const Eigen::VectorXd& mean, const Eigen::MatrixXd& covariance) { setMeanCovariance(mean, covariance); }
 
   // useful functions

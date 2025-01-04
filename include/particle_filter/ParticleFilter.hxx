@@ -362,7 +362,7 @@ std::vector<double> ParticleFilter<StateType>::getCovariance(float percentage) c
   // std::cout << "percentage: " << percentage;
   // std::cout << "nums to consider: " << numToConsider;
   unsigned int i = 0;
-  for (i; i < numToConsider; i++) {
+  for (; i < numToConsider; i++) {
     xI += std::round(m_CurrentList[i]->getState().getXPos() * 10000.0) / 10000.0;
     yI += std::round(m_CurrentList[i]->getState().getYPos() * 10000.0) / 10000.0;
     thetaSinI += std::round(m_CurrentList[i]->getState().getSinTheta() * 10000.0) / 10000.0;

@@ -19,7 +19,7 @@ class KMeans {
     num_clusters_ = 0;
     termination_flag_ = false;
   }
-  KMeans(const int num_clusters) {
+  explicit KMeans(const int num_clusters) {
     setNumClusters(num_clusters);
     termination_flag_ = false;
   }

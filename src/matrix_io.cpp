@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <string>
 
-void MatrixIO::readFromFile(const std::string filename, Eigen::MatrixXd& matrix) {
+void MatrixIO::readFromFile(const std::string& filename, Eigen::MatrixXd& matrix) {
   std::ifstream input_file;
   std::string line;
   int rows = 0;
@@ -61,7 +61,7 @@ void MatrixIO::readFromFile(const std::string filename, Eigen::MatrixXd& matrix)
   input_file.close();
 }
 
-void MatrixIO::writeToFile(const std::string filename, const Eigen::MatrixXd& matrix) {
+void MatrixIO::writeToFile(const std::string& filename, const Eigen::MatrixXd& matrix) {
   std::ofstream output_file;
 
   output_file.open(filename);

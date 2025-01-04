@@ -18,8 +18,6 @@
 
 namespace gmms {
 void GMMClassifier::train(const Eigen::MatrixXd& dataset, bool evaluate_bic, int gmm_components) {
-  int dataset_size = dataset.rows();
-
   Eigen::VectorXi labels = dataset.rightCols(1).cast<int>();
   Eigen::MatrixXd training_data = dataset.leftCols(dataset.cols() - 1);
   std::set<int> classes(labels.data(), labels.data() + labels.size());
@@ -77,7 +75,7 @@ void GMMClassifier::train(const Eigen::MatrixXd& dataset, bool evaluate_bic, int
 
       try {
         model->expectationMaximization(class_data);
-      } catch (std::runtime_error& e) {
+      } catch (const std::runtime_error& e) {
         std::cout << "\t\t\t\t" << c << " components are not usable" << std::endl;
         break;
       }
@@ -88,10 +86,7 @@ void GMMClassifier::train(const Eigen::MatrixXd& dataset, bool evaluate_bic, int
       if (first_trial || trial_bic < bic) {
         bic = trial_bic;
         gmm_vec_[class_idx] = model;
-
-        if (first_trial) {
-          first_trial = false;
-        }
+        first_trial = false;
       }
     }
 
@@ -115,11 +110,6 @@ std::vector<int> GMMClassifier::predict(const Eigen::MatrixXd& dataset) const {
   int dataset_size = dataset.rows();
   std::vector<int> assignments(dataset_size);
 
-  int num_threads = omp_get_max_threads();
-  int thread_dataset_size = floor(double(dataset_size) / double(num_threads));
-
-  int thread_log_likelihood[num_threads];
-
 #pragma omp parallel for
   for (int i = 0; i < dataset_size; ++i) {
     bool first = true;
@@ -135,10 +125,7 @@ std::vector<int> GMMClassifier::predict(const Eigen::MatrixXd& dataset) const {
       if (first || log_likelihood < class_log_likelihood) {
         assignments[i] = classes_[k];
         log_likelihood = class_log_likelihood;
-
-        if (first) {
-          first = false;
-        }
+        first = false;
       }
     }
   }
@@ -146,7 +133,7 @@ std::vector<int> GMMClassifier::predict(const Eigen::MatrixXd& dataset) const {
   return assignments;
 }
 
-void GMMClassifier::load(const std::string filename) {
+void GMMClassifier::load(const std::string& filename) {
   MatrixIO mio;
   Eigen::MatrixXd model;
 
@@ -171,7 +158,7 @@ void GMMClassifier::load(const std::string filename) {
   }
 }
 
-void GMMClassifier::save(const std::string filename) {
+void GMMClassifier::save(const std::string& filename) {
   MatrixIO mio;
   int rows = 0;
   int cols = 0;

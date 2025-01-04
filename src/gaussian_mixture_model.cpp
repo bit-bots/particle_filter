@@ -62,7 +62,6 @@ void GaussianMixtureModel::expectationMaximization(const Eigen::MatrixXd& datase
     throw std::runtime_error(notinitialized_());
   }
 
-  double old_log_likelihood;
   double log_likelihood = 0.0;
   double delta = 0.0;
   int iteration = 0;
@@ -70,7 +69,7 @@ void GaussianMixtureModel::expectationMaximization(const Eigen::MatrixXd& datase
   do {
     expectation(dataset);
     maximization(dataset);
-    old_log_likelihood = log_likelihood;
+    double old_log_likelihood = log_likelihood;
     log_likelihood = logLikelihood(dataset);
     delta = log_likelihood - old_log_likelihood;
     ++iteration;
@@ -84,8 +83,6 @@ void GaussianMixtureModel::expectation(const Eigen::MatrixXd& dataset) {
 
 #pragma omp parallel for
   for (int i = 0; i < dataset_size; ++i) {
-    double normalization_factor = 0.f;
-
     for (int j = 0; j < num_components_; ++j) {
       expectations_(i, j) = prior_vec_[j] * gaussian_vec_[j].evaluate_point(dataset.row(i));
 
@@ -97,7 +94,7 @@ void GaussianMixtureModel::expectation(const Eigen::MatrixXd& dataset) {
     double expectations_sum = expectations_.row(i).sum();
 
     if (expectations_sum != 0) {
-      normalization_factor = std::min(1 / expectations_sum, 1e15);
+      double normalization_factor = std::min(1 / expectations_sum, 1e15);
       expectations_.row(i) = normalization_factor * expectations_.row(i);
     }
   }
@@ -105,7 +102,6 @@ void GaussianMixtureModel::expectation(const Eigen::MatrixXd& dataset) {
 
 void GaussianMixtureModel::maximization(const Eigen::MatrixXd& dataset) {
   int dataset_size = dataset.rows();
-  double expectation_sum = 0.f;
 
   for (int i = 0; i < num_components_; ++i) {
     prior_vec_[i] = expectations_.col(i).sum();
@@ -247,7 +243,6 @@ visualization_msgs::msg::Marker GaussianMixtureModel::renderMarker(float x0, flo
   matrix = matrix / matrix.maxCoeff();
   float x_delta = std::abs(x1 - x0);
   float y_delta = std::abs(y1 - y0);
-  float x, y;
   float x_stepsize = x_delta / stepcount;
   float y_stepsize = y_delta / stepcount;
   visualization_msgs::msg::Marker marker;
@@ -267,9 +262,9 @@ visualization_msgs::msg::Marker GaussianMixtureModel::renderMarker(float x0, flo
   }
 
   for (int y_step = 0; y_step < stepcount; y_step++) {
-    y = y0 + (y_stepsize * y_step);
+    float y = y0 + (y_stepsize * y_step);
     for (int x_step = 0; x_step < stepcount; x_step++) {
-      x = x0 + (x_stepsize * x_step);
+      float x = x0 + (x_stepsize * x_step);
       geometry_msgs::msg::Point point;
       point.x = x;
       point.y = y;

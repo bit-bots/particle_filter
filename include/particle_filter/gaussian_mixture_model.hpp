@@ -71,14 +71,14 @@ class GaussianMixtureModel {
   GaussianMixtureModel copy() const;
   Eigen::MatrixXd save();
 
-  inline void load(const std::string filename) {
+  inline void load(const std::string& filename) {
     MatrixIO mio;
     Eigen::MatrixXd model;
     mio.readFromFile(filename, model);
     load(model);
   }
 
-  inline void save(const std::string filename) {
+  inline void save(const std::string& filename) {
     MatrixIO mio;
     mio.writeToFile(filename, save());
   }
@@ -135,16 +135,15 @@ class GaussianMixtureModel {
   std::vector<double> prior_vec_;
   std::vector<Gaussian> gaussian_vec_;
 
-  GaussianMixtureModel(int num_components, double delta, int num_iterations, std::vector<double> prior_vec_,
-                       std::vector<Gaussian> gaussian_vec_, Eigen::MatrixXd expectations_) {
-    num_components_ = num_components;
-    prior_vec_ = std::vector<double>(prior_vec_);
-    gaussian_vec_ = std::vector<Gaussian>(gaussian_vec_);
-    expectations_ = expectations_.replicate(1, 1);
-    delta_ = delta;
-    num_iterations_ = num_iterations;
-    initialized_ = false;
-  }
+  GaussianMixtureModel(int num_components, double delta, int num_iterations, const std::vector<double>& prior_vec,
+                       const std::vector<Gaussian>& gaussian_vec, const Eigen::MatrixXd& expectations)
+      : initialized_(false),
+        delta_(delta),
+        num_iterations_(num_iterations),
+        num_components_(num_components),
+        expectations_(expectations.replicate(1, 1)),
+        prior_vec_(prior_vec),
+        gaussian_vec_(gaussian_vec) {}
 
   inline double probability_density_function(const Eigen::VectorXd point) {
     double probability = 0;

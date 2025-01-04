@@ -77,15 +77,14 @@ void Gaussian::addToEigenMatrix(Eigen::MatrixXd& matrix, float x0, float y0, flo
   assert(y0 < y1);
   float x_delta = std::abs(x1 - x0);
   float y_delta = std::abs(y1 - y0);
-  float x, y;
   float x_mean = mean_(0, 0);
   float y_mean = mean_(1, 0);
   // TODO: save stepsize
 
   for (int y_step = 0; y_step < stepcount; y_step++) {
-    y = y0 + (y_delta / stepcount * y_step);
+    float y = y0 + (y_delta / stepcount * y_step);
     for (int x_step = 0; x_step < stepcount; x_step++) {
-      x = x0 + (x_delta / stepcount * x_step);
+      float x = x0 + (x_delta / stepcount * x_step);
       // Function taken from
       // https://en.wikipedia.org/wiki/Gaussian_function#Two-dimensional_Gaussian_function
       // matrix(y_step, x_step) += 1 * std::exp(-(std::pow(x - x_mean, 2)

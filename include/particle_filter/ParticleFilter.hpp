@@ -504,6 +504,6 @@ class ParticleFilter {
 }  // namespace particle_filter
 
 // include template implementation
-#include <ParticleFilter.hxx>
+#include <particle_filter/ParticleFilter.hxx>
 
 #endif  // PARTICLEFILTER_HPP

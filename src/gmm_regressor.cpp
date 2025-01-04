@@ -44,7 +44,7 @@ void GMMRegressor::train(const Eigen::MatrixXd& dataset, bool evaluate_bic, int 
 
     try {
       model->expectationMaximization(dataset);
-    } catch (std::runtime_error& e) {
+    } catch (const std::runtime_error& e) {
       std::cout << "\t\t\t\t" << c << " components are not usable" << std::endl;
       break;
     }
@@ -56,10 +56,7 @@ void GMMRegressor::train(const Eigen::MatrixXd& dataset, bool evaluate_bic, int 
     if (first_trial || trial_bic < bic) {
       bic = trial_bic;
       gmm_ = model;
-
-      if (first_trial) {
-        first_trial = false;
-      }
+      first_trial = false;
     }
   }
 
@@ -147,7 +144,7 @@ Eigen::MatrixXd GMMRegressor::predict(const Eigen::MatrixXd& dataset, const Eige
   return regressions;
 }
 
-void GMMRegressor::load(const std::string filename) {
+void GMMRegressor::load(const std::string& filename) {
   MatrixIO mio;
   Eigen::MatrixXd model;
 
@@ -161,7 +158,7 @@ void GMMRegressor::load(const std::string filename) {
   gmm_->load(model.block(4, 0, model.rows() - 4, model.cols()));
 }
 
-void GMMRegressor::save(const std::string filename) {
+void GMMRegressor::save(const std::string& filename) {
   MatrixIO mio;
   Eigen::MatrixXd gmm_model = gmm_->save();
   Eigen::MatrixXd model = Eigen::MatrixXd::Zero(gmm_model.rows() + 4, gmm_model.cols());

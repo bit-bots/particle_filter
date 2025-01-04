@@ -21,7 +21,6 @@ void KMeans::cluster(const Eigen::MatrixXd& dataset) {
   }
 
   forgyInitialization(dataset);
-  int iterations = 0;
 
   do {
     assign(dataset);

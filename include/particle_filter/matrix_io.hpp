@@ -16,8 +16,8 @@ class MatrixIO {
   MatrixIO() {}
   ~MatrixIO() {}
 
-  void readFromFile(const std::string filename, Eigen::MatrixXd& matrix);
-  void writeToFile(const std::string filename, const Eigen::MatrixXd& matrix);
+  void readFromFile(const std::string& filename, Eigen::MatrixXd& matrix);
+  void writeToFile(const std::string& filename, const Eigen::MatrixXd& matrix);
 };
 
 #endif  // _MATRIX_IO_HPP_

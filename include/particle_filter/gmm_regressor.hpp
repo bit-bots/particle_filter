@@ -21,11 +21,13 @@ class GMMRegressor {
     delta_ = 0.01;
     max_iterations_ = 100;
     trained_ = false;
+    input_size_ = 0;
   }
   GMMRegressor(const double delta, const int max_iterations) {
     delta_ = delta;
     max_iterations_ = max_iterations;
     trained_ = false;
+    input_size_ = 0;
   }
 
   // dataset with each datapoint per row and each dimension per column
@@ -37,8 +39,8 @@ class GMMRegressor {
     return predict(dataset, indices);
   }
   Eigen::MatrixXd predict(const Eigen::MatrixXd& dataset, const Eigen::VectorXi& output_indices) const;
-  void load(const std::string filename);
-  void save(const std::string filename);
+  void load(const std::string& filename);
+  void save(const std::string& filename);
 
   // setter & getter
   inline double delta() const { return delta_; }

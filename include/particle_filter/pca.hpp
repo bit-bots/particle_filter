@@ -16,7 +16,7 @@ class PCA {
  public:
   // constructors
   PCA() { num_components_ = 0; }
-  PCA(const int num_components) { num_components_ = num_components; }
+  explicit PCA(const int num_components) { num_components_ = num_components; }
 
   // setters & getters
   inline void setNumComponents(const int num_components) { num_components_ = num_components; }
