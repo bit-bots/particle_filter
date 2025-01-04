@@ -34,9 +34,9 @@ if(OPENMP_FOUND)
       set(OPENMP_DLL VCOMP100)
     endif(MSVC90)
     set(CMAKE_SHARED_LINKER_FLAGS_DEBUG
-      "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /DELAYLOAD:${OPENMP_DLL}D.dll")
+        "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /DELAYLOAD:${OPENMP_DLL}D.dll")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE
-      "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DELAYLOAD:${OPENMP_DLL}.dll")
+        "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DELAYLOAD:${OPENMP_DLL}.dll")
   endif(MSVC90 OR MSVC10)
 
 else(OPENMP_FOUND)
@@ -54,29 +54,34 @@ endif(MSVC)
 
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-set(SOURCES src/CRandomNumberGenerator.cpp src/gaussian.cpp
-  src/gaussian_mixture_model.cpp src/gmm_classifier.cpp src/gmm_regressor.cpp
-  src/k_means.cpp src/matrix_io.cpp src/pca.cpp)
+set(SOURCES
+    src/CRandomNumberGenerator.cpp
+    src/gaussian.cpp
+    src/gaussian_mixture_model.cpp
+    src/gmm_classifier.cpp
+    src/gmm_regressor.cpp
+    src/k_means.cpp
+    src/matrix_io.cpp
+    src/pca.cpp)
 
 set(CODE_LIBRARIES)
 
 add_library(${PROJECT_NAME} ${SOURCES})
 
-ament_target_dependencies(${PROJECT_NAME} SYSTEM
-    Eigen3
-    geometry_msgs
-    rclcpp
-    std_msgs
-    visualization_msgs)
+ament_target_dependencies(
+  ${PROJECT_NAME}
+  SYSTEM
+  Eigen3
+  geometry_msgs
+  rclcpp
+  std_msgs
+  visualization_msgs)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION include/${PROJECT_NAME})
+install(DIRECTORY include/${PROJECT_NAME}/ DESTINATION include/${PROJECT_NAME})
 
-install(TARGETS ${PROJECT_NAME}
-  LIBRARY
-  DESTINATION lib)
+install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
 
 ament_export_dependencies(std_msgs)
 ament_export_dependencies(geometry_msgs)
@@ -87,12 +92,13 @@ ament_export_dependencies(visualization_msgs)
 ament_export_include_directories(${INCLUDE_DIRS})
 ament_export_libraries(${PROJECT_NAME})
 
-install(DIRECTORY include/
-    DESTINATION include)
+install(DIRECTORY include/ DESTINATION include)
 
-install(TARGETS ${PROJECT_NAME}
+install(
+  TARGETS ${PROJECT_NAME}
   EXPORT ${PROJECT_NAME}
   LIBRARY DESTINATION lib
-  INCLUDES DESTINATION include)
+  INCLUDES
+  DESTINATION include)
 
 ament_package()
