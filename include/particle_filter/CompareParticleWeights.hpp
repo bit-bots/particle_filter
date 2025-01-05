@@ -1,7 +1,7 @@
-#ifndef COMPAREPARTICLEWEIGHTS_H
-#define COMPAREPARTICLEWEIGHTS_H
+#ifndef COMPAREPARTICLEWEIGHTS_HPP
+#define COMPAREPARTICLEWEIGHTS_HPP
 
-#include "particle_filter/Particle.h"
+#include <particle_filter/Particle.hpp>
 
 namespace particle_filter {
 
@@ -21,17 +21,17 @@ namespace particle_filter {
  */
 template <class StateType>
 class CompareParticleWeights {
-public:
-    /**
-     * @return true if the weight of the particle p1 is higher than the weight
-     * of particle p2.
-     */
-    bool operator()(const particle_filter::Particle<StateType>* p1,
-            const particle_filter::Particle<StateType>* p2) const {
-        return p1->getWeight() > p2->getWeight();
-    }
+ public:
+  /**
+   * @return true if the weight of the particle p1 is higher than the weight
+   * of particle p2.
+   */
+  bool operator()(const particle_filter::Particle<StateType>* p1,
+                  const particle_filter::Particle<StateType>* p2) const {
+    return p1->getWeight() > p2->getWeight();
+  }
 };
 
 }  // namespace particle_filter
 
-#endif
+#endif  // COMPAREPARTICLEWEIGHTS_HPP
