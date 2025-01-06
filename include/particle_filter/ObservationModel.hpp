@@ -1,5 +1,5 @@
-#ifndef OBSERVATIONSTRATEGY_H
-#define OBSERVATIONSTRATEGY_H
+#ifndef OBSERVATIONSTRATEGY_HPP
+#define OBSERVATIONSTRATEGY_HPP
 
 #include <cmath>
 
@@ -28,33 +28,33 @@ namespace particle_filter {
 
 template <class StateType>
 class ObservationModel {
-public:
-    /**
-     * The destructor is empty.
-     */
-    virtual ~ObservationModel();
+ public:
+  /**
+   * The destructor is empty.
+   */
+  virtual ~ObservationModel();
 
-    /**
-     * This is the main method of ObservationModel. It takes a state reference
-     * as argument and is supposed to extract the state's variables to compute
-     * an importance weight for the state.
-     * Define this method in your sub-class!
-     * @param state Reference to the state that has to be weightened.
-     * @return importance weight for the given state (positive, non-zero value).
-     */
-    virtual double measure(const StateType& state) const = 0;
+  /**
+   * This is the main method of ObservationModel. It takes a state reference
+   * as argument and is supposed to extract the state's variables to compute
+   * an importance weight for the state.
+   * Define this method in your sub-class!
+   * @param state Reference to the state that has to be weightened.
+   * @return importance weight for the given state (positive, non-zero value).
+   */
+  virtual double measure(const StateType& state) const = 0;
 
-    virtual bool measurements_available() = 0;
-    // virtual void clear_measurement();
-    virtual double get_min_weight() const = 0;
+  virtual bool measurements_available() = 0;
+  // virtual void clear_measurement();
+  virtual double get_min_weight() const = 0;
 
-    bool accumulate_weights_ = false;
+  bool accumulate_weights_ = false;
 
-private:
+ private:
 };
 
 template <class StateType>
 ObservationModel<StateType>::~ObservationModel() {}
 
 }  // namespace particle_filter
-#endif
+#endif  // OBSERVATIONSTRATEGY_HPP
