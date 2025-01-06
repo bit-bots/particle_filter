@@ -13,13 +13,14 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(backward_ros REQUIRED)
-find_package(Eigen3 REQUIRED)
 find_package(eigen3_cmake_module REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(tf2_eigen REQUIRED)
 find_package(visualization_msgs REQUIRED)
+
+find_package(Eigen3 REQUIRED)
 
 set(INCLUDE_DIRS include)
 include_directories(${INCLUDE_DIRS})
